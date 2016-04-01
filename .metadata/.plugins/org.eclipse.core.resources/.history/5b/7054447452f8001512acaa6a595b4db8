@@ -1,0 +1,5 @@
+package br.com.gotorcida.dao;
+
+public class UsuarioDAO {
+
+}

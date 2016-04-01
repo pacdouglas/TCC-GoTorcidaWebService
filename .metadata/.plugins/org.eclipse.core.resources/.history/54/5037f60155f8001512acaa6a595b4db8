@@ -1,0 +1,20 @@
+package br.com.gotorcida.resource;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+import br.com.gotorcida.dao.UsuarioDAO;
+import br.com.gotorcida.modelo.Usuario;
+
+@Path("usuarios")
+public class UsuarioResource {
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String busca(){
+		Usuario usuario = new UsuarioDAO().busca(1);
+		return usuario.toJSON();
+	}
+}

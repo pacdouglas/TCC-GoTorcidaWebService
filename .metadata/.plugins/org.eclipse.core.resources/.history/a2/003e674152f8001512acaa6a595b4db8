@@ -1,0 +1,10 @@
+package br.com.gotorcida.resource;
+
+public class UsuarioResource {
+
+	@Path("usuarios")
+	public class UsuarioResource {
+
+	}
+	
+}

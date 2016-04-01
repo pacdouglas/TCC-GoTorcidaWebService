@@ -1,0 +1,34 @@
+package br.com.gotorcida.dao;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import br.com.gotorcida.modelo.Atleta;
+import br.com.gotorcida.modelo.Time;
+
+public class TimeDAO {
+	private static Map<Integer, Time> banco = new HashMap<Integer, Time>();
+	private static AtomicLong contador = new AtomicLong(1);
+
+	static {
+		Time time = new Time();
+		time.setCodigo(1);
+		time.setNome("Mavericks");
+		time.adicionaAtleta(new Atleta(1, "José Ricardo Zanardo Junior", 23));
+	}
+
+	public void adiciona(Time Time) {
+		int id = (int) contador.incrementAndGet();
+		Time.setCodigo(id);
+		banco.put(id, Time);
+	}
+
+	public Time busca(int id) {
+		return banco.get(id);
+	}
+
+	public void remove(int id) {
+		return banco.remove(id);
+	}
+}
