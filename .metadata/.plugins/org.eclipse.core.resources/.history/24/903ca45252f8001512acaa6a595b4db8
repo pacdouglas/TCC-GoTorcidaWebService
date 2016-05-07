@@ -1,8 +1,0 @@
-package br.com.gotorcida.resource;
-
-import javax.ws.rs.Path;
-
-@Path("usuarios")
-public class UsuarioResource {
-
-}
