@@ -14,7 +14,7 @@ import javax.persistence.TemporalType;
 public class Athlete implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+//risos
 	@Id
 	@GeneratedValue
 	private int id;
