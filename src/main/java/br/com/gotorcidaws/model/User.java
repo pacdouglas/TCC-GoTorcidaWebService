@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -47,21 +49,25 @@ public class User implements Serializable {
 	@Column
 	private String celNumber;
 
-	@Column()
+	@Column(length = 1)
+	@Enumerated(EnumType.ORDINAL)
 	private UserType userType;
 
-	 @ManyToMany
-     @JoinTable(name="users_sports", joinColumns=
-     {@JoinColumn(name="user_id")}, inverseJoinColumns=
-       {@JoinColumn(name="sport_id")})
+	@ManyToMany
+	@JoinTable(name = "users_sports", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "sport_id") })
 	List<Sport> sports;
-	
-	 @ManyToMany
-     @JoinTable(name="users_teams", joinColumns=
-     {@JoinColumn(name="user_id")}, inverseJoinColumns=
-       {@JoinColumn(name="team_id")})
+
+	@ManyToMany
+	@JoinTable(name = "users_teams", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "team_id") })
 	List<Team> teams;
-	
+
+	@ManyToMany
+	@JoinTable(name = "user_athletes", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "athlete_id") })
+	List<Athlete> athletes;
+
 	public int getId() {
 		return id;
 	}
