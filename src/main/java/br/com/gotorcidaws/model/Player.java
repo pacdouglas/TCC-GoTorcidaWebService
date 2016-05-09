@@ -1,10 +1,15 @@
 package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Player implements Serializable {
@@ -18,6 +23,12 @@ public class Player implements Serializable {
 	@Column
 	private String name;
 
+	 @ManyToMany
+	 @JoinTable(name="team_players", joinColumns=
+	 {@JoinColumn(name="player_id")}, inverseJoinColumns=
+	   {@JoinColumn(name="team_id")})
+	List<Team> teams;
+	 
 	public int getId() {
 		return id;
 	}

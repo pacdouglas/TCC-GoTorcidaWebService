@@ -3,6 +3,7 @@ package br.com.gotorcidaws.model;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,11 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.google.gson.Gson;
 
 @Entity
 public class Team implements Serializable {
@@ -28,7 +26,7 @@ public class Team implements Serializable {
 	@Column
 	private String name;
 
-	@ManyToOne
+	@Column
 	private Sport sport;
 
 	@Temporal(TemporalType.DATE)
@@ -41,9 +39,10 @@ public class Team implements Serializable {
 	@Column
 	private String website;
 
-	@ManyToMany
-	@JoinTable(name = "team_players", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "player_id") })
+	 @ManyToMany
+	 @JoinTable(name="team_players", joinColumns=
+	 {@JoinColumn(name="team_id")}, inverseJoinColumns=
+	   {@JoinColumn(name="player_id")})
 	List<Player> players;
 
 	public int getId() {
@@ -94,7 +93,5 @@ public class Team implements Serializable {
 		this.website = website;
 	}
 
-	public String toJSON() {
-		return new Gson().toJson(this);
-	}
+
 }
