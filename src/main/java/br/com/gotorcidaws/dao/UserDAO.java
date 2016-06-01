@@ -9,16 +9,16 @@ public class UserDAO extends GenericDAO<User> {
 	}
 
 	public void save(User user) {
-		save(user);
+		super.save(user);
 	}
 
 	public void update(User user) {
-		update(user);
+		super.update(user);
 	}
 
 	public void delete(long id) {
 		User u = findById(id);
-		delete(u);
+		super.delete(u);
 	}
 
 	public User findByUsername(String username) {

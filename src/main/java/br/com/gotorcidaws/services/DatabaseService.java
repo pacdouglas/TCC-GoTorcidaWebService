@@ -17,11 +17,11 @@ public class DatabaseService {
 		Message message = new Message();
 		try {
 			DatabaseGenerator.createDatabase();
-			message.setSystem("code", "200");
-			message.setSystem("message", "Database criado com sucesso.");
+			message.addSystem("code", "200");
+			message.addSystem("message", "Database criado com sucesso.");
 		} catch (Exception e) {
-			message.setSystem("code", "500");
-			message.setSystem("message", "Erro ao criar banco de dados.");
+			message.addSystem("code", "500");
+			message.addSystem("message", "Erro ao criar banco de dados.");
 			message.addData("errorMessage", e.getMessage());
 		}
 

@@ -40,10 +40,10 @@ public class Team implements Serializable {
 	private String website;
 
 	 @ManyToMany
-	 @JoinTable(name="team_players", joinColumns=
+	 @JoinTable(name="team_athletes", joinColumns=
 	 {@JoinColumn(name="team_id")}, inverseJoinColumns=
-	   {@JoinColumn(name="player_id")})
-	List<Player> players;
+	   {@JoinColumn(name="athlete_id")})
+	List<Athlete> athletes;
 
 	public int getId() {
 		return id;

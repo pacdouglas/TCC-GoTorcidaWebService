@@ -16,7 +16,7 @@ import javax.persistence.TemporalType;
 
 import com.google.gson.Gson;
 
-@Entity
+@Entity()
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -27,6 +27,9 @@ public class User implements Serializable {
 
 	@Column
 	private String username;
+	
+	@Column
+	private String password;
 
 	@Column
 	private String fullName;
@@ -134,6 +137,14 @@ public class User implements Serializable {
 		this.userType = userType;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -144,6 +155,7 @@ public class User implements Serializable {
 		result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((nickname == null) ? 0 : nickname.hashCode());
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((telNumber == null) ? 0 : telNumber.hashCode());
 		result = prime * result + ((userType == null) ? 0 : userType.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
@@ -186,6 +198,11 @@ public class User implements Serializable {
 				return false;
 		} else if (!nickname.equals(other.nickname))
 			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
 		if (telNumber == null) {
 			if (other.telNumber != null)
 				return false;
@@ -203,9 +220,9 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", fullName=" + fullName + ", nickname=" + nickname
-				+ ", dateOfBirth=" + dateOfBirth + ", emailAddress=" + emailAddress + ", telNumber=" + telNumber
-				+ ", celNumber=" + celNumber + ", userType=" + userType + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullName=" + fullName
+				+ ", nickname=" + nickname + ", dateOfBirth=" + dateOfBirth + ", emailAddress=" + emailAddress
+				+ ", telNumber=" + telNumber + ", celNumber=" + celNumber + ", userType=" + userType + "]";
 	}
 
 	public String toJSON() {

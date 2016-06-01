@@ -3,6 +3,7 @@ package br.com.gotorcidaws.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -75,6 +76,11 @@ public class GenericDAO<T extends Serializable> {
 	@SuppressWarnings("unchecked")
 	public T findById(long id) {
 		return (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("id", id)).uniqueResult();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public T findByName(String name) {
+		return (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("name", name)).uniqueResult();
 	}
 
 	private void close() {

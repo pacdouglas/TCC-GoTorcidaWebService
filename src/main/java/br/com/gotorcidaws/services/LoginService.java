@@ -16,31 +16,34 @@ public class LoginService {
 	private UserDAO userDAO = new UserDAO();
 
 	@GET
-	@Path("{username}")
+	@Path("{username}/{password}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String login(@PathParam("username") String username) {
-		User user = userDAO.findByUsername(username);
-
-		Message message = new Message();
+	public String login(@PathParam("username") String username, @PathParam("password") String password) {
+		System.out.println("Parâmetro recebido [username]: " + username);
+		System.out.println("Parâmetro recebido [password]: " + password);
 		
+		User user = userDAO.findByUsername(username);
+		
+		Message message = new Message();
+
 		if (user != null) {
-			message.setSystem("code", "200");
-			message.setSystem("message", "Login realizado com sucesso.");
+			message.addSystem("code", "200");
+			message.addSystem("message", "Login realizado com sucesso.");
 			message.addData("usuario", user.toJSON());
 		} else {
-			message.setSystem("code", "401");
-			message.setSystem("message", "Usuário e/ou senha incorreto(s).");
+			message.addSystem("code", "401");
+			message.addSystem("message", "Usuário e/ou senha incorreto(s).");
 		}
-		
+
 		return message.toJSON();
 	}
-	
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public String loginTeste() {
 		Message message = new Message();
-		message.setSystem("code", "666");
-		message.setSystem("message", "Lucifer approves.");
+		message.addSystem("code", "666");
+		message.addSystem("message", "Lucifer approves.");
 		return message.toJSON();
 	}
 }
