@@ -19,17 +19,14 @@ public class LoginService {
 	@Path("{username}/{password}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String login(@PathParam("username") String username, @PathParam("password") String password) {
-		System.out.println("Parâmetro recebido [username]: " + username);
-		System.out.println("Parâmetro recebido [password]: " + password);
-		
 		User user = userDAO.findByUsername(username);
-		
+
 		Message message = new Message();
 
-		if (user != null) {
+		if (user != null && (user.getPassword().equals(password))) {
 			message.addSystem("code", "200");
 			message.addSystem("message", "Login realizado com sucesso.");
-			message.addData("usuario", user.toJSON());
+			message.addData("user", user.toJSON());
 		} else {
 			message.addSystem("code", "401");
 			message.addSystem("message", "Usuário e/ou senha incorreto(s).");

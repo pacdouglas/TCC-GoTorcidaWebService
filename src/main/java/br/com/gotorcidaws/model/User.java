@@ -50,8 +50,11 @@ public class User implements Serializable {
 	@Column
 	private String celNumber;
 
-	@Column()
+	@Column
 	private UserType userType;
+	
+	@Column
+	private String firstAccess;
 
 	 @ManyToMany
      @JoinTable(name="users_sports", joinColumns=
@@ -145,6 +148,14 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	
+	public String getFirstAccess() {
+		return firstAccess;
+	}
+
+	public void setFirstAccess(String firstAccess) {
+		this.firstAccess = firstAccess;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

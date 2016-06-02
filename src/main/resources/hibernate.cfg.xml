@@ -3,7 +3,7 @@
 	<session-factory>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.password">glande321</property>
+		<property name="hibernate.connection.password">992200</property>
 		<property name="hibernate.connection.url">jdbc:mysql://localhost/gotorcidaws</property>
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -13,7 +13,6 @@
 		<mapping class="br.com.gotorcidaws.model.User" />
 		<mapping class="br.com.gotorcidaws.model.Sport" />
 		<mapping class="br.com.gotorcidaws.model.Team" />
-		<mapping class="br.com.gotorcidaws.model.Player" />
 		<mapping class="br.com.gotorcidaws.model.Athlete" />
 	</session-factory>
 </hibernate-configuration> 
