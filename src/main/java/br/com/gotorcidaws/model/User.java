@@ -16,7 +16,7 @@ import javax.persistence.TemporalType;
 
 import com.google.gson.Gson;
 
-@Entity()
+@Entity(name="users")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -25,35 +25,35 @@ public class User implements Serializable {
 	@GeneratedValue
 	private int id;
 
-	@Column
+	@Column(length = 30, nullable = false)
 	private String username;
 	
-	@Column
+	@Column(length = 30, nullable = false)
 	private String password;
 
-	@Column
+	@Column(length = 50, nullable = false)
 	private String fullName;
 
-	@Column
+	@Column(length = 20, nullable = false)
 	private String nickname;
 
 	@Temporal(TemporalType.DATE)
-	@Column
+	@Column(nullable = false)
 	private Calendar dateOfBirth;
 
-	@Column
+	@Column(length = 100, nullable = false)
 	private String emailAddress;
 
-	@Column
+	@Column(length = 12)
 	private String telNumber;
 
-	@Column
+	@Column(length = 12)
 	private String celNumber;
 
-	@Column
+	@Column(nullable = false)
 	private UserType userType;
 	
-	@Column
+	@Column(length = 1, nullable = false)
 	private String firstAccess;
 
 	 @ManyToMany

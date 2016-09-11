@@ -14,7 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
+@Entity(name="teams")
 public class Team implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -23,20 +23,20 @@ public class Team implements Serializable {
 	@GeneratedValue
 	private int id;
 
-	@Column
+	@Column(length = 100, nullable = false)
 	private String name;
 
-	@Column
+	@Column(nullable = false)
 	private Sport sport;
 
 	@Temporal(TemporalType.DATE)
-	@Column
+	@Column(nullable = false)
 	private Calendar registrationDate;
 
-	@Column
+	@Column(length = 100, nullable = false)
 	private String emailAddress;
 
-	@Column
+	@Column(length = 100, nullable = false)
 	private String website;
 
 	 @ManyToMany
@@ -93,5 +93,68 @@ public class Team implements Serializable {
 		this.website = website;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((athletes == null) ? 0 : athletes.hashCode());
+		result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
+		result = prime * result + id;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((registrationDate == null) ? 0 : registrationDate.hashCode());
+		result = prime * result + ((sport == null) ? 0 : sport.hashCode());
+		result = prime * result + ((website == null) ? 0 : website.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Team other = (Team) obj;
+		if (athletes == null) {
+			if (other.athletes != null)
+				return false;
+		} else if (!athletes.equals(other.athletes))
+			return false;
+		if (emailAddress == null) {
+			if (other.emailAddress != null)
+				return false;
+		} else if (!emailAddress.equals(other.emailAddress))
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (registrationDate == null) {
+			if (other.registrationDate != null)
+				return false;
+		} else if (!registrationDate.equals(other.registrationDate))
+			return false;
+		if (sport == null) {
+			if (other.sport != null)
+				return false;
+		} else if (!sport.equals(other.sport))
+			return false;
+		if (website == null) {
+			if (other.website != null)
+				return false;
+		} else if (!website.equals(other.website))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Team [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + registrationDate
+				+ ", emailAddress=" + emailAddress + ", website=" + website + ", athletes=" + athletes + "]";
+	}
 
 }

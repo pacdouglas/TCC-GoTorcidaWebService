@@ -22,7 +22,12 @@ public class UserService {
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public String save(String content) {
+	public Response save(String content) {
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		System.out.println(content);
+		
 		User user = (User) new Gson().fromJson(content, User.class);
 		user.setFirstAccess("S");
 		Message message = new Message();
@@ -36,8 +41,8 @@ public class UserService {
 			message.addSystem("code", "401");
 			message.addSystem("message", "Nome de usuário já em uso.");
 		}
-
-		return message.toJSON();
+		
+	    return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
 
 	@Path("{id}")

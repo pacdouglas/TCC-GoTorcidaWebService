@@ -11,41 +11,37 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity(name="athletes")
-public class Athlete implements Serializable {
+@Entity(name="leagues")
+public class League implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@GeneratedValue
 	private int id;
-
-	@Column
+	
+	@Column(length = 70, nullable = false)
 	private String name;
-
-	@ManyToOne
-	private Sport sport;
-
+	
 	@Temporal(TemporalType.DATE)
-	@Column
+	@Column(nullable = false)
 	private Calendar registrationDate;
-
-	@Column
+	
+	@Column(length = 100, nullable = false)
 	private String emailAddress;
 
-	@Column
+	@Column(length = 100, nullable = false)
 	private String website;
-
+	
 	 @ManyToMany
-	 @JoinTable(name="team_athletes", joinColumns=
-	 {@JoinColumn(name="athlete_id")}, inverseJoinColumns=
-	   {@JoinColumn(name="team_id")})
-	List<Team> teams;
-	 
+	 @JoinTable(name="league_competitors", joinColumns=
+	 {@JoinColumn(name="league_id")}, inverseJoinColumns=
+	   {@JoinColumn(name="competitor_id")})
+	List<Competitor> competitors;
+
 	public int getId() {
 		return id;
 	}
@@ -60,14 +56,6 @@ public class Athlete implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Sport getSport() {
-		return sport;
-	}
-
-	public void setSport(Sport sport) {
-		this.sport = sport;
 	}
 
 	public Calendar getRegistrationDate() {
@@ -94,10 +82,6 @@ public class Athlete implements Serializable {
 		this.website = website;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -106,7 +90,6 @@ public class Athlete implements Serializable {
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((registrationDate == null) ? 0 : registrationDate.hashCode());
-		result = prime * result + ((sport == null) ? 0 : sport.hashCode());
 		result = prime * result + ((website == null) ? 0 : website.hashCode());
 		return result;
 	}
@@ -119,7 +102,7 @@ public class Athlete implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Athlete other = (Athlete) obj;
+		League other = (League) obj;
 		if (emailAddress == null) {
 			if (other.emailAddress != null)
 				return false;
@@ -137,11 +120,6 @@ public class Athlete implements Serializable {
 				return false;
 		} else if (!registrationDate.equals(other.registrationDate))
 			return false;
-		if (sport == null) {
-			if (other.sport != null)
-				return false;
-		} else if (!sport.equals(other.sport))
-			return false;
 		if (website == null) {
 			if (other.website != null)
 				return false;
@@ -152,8 +130,7 @@ public class Athlete implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Athlete [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + registrationDate
-				+ ", emailAddress=" + emailAddress + ", website=" + website + "]";
+		return "League [id=" + id + ", name=" + name + ", registrationDate=" + registrationDate + ", emailAddress="
+				+ emailAddress + ", website=" + website + "]";
 	}
-
 }

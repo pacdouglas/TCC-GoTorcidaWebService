@@ -1,12 +1,11 @@
 package br.com.gotorcidaws.model;
 
-public enum UserType {
-	Normal(1), Team(2), League(3);
+public enum CompetitorType {
+	Team(1), League(2);
 
 	public int type;
 
-	UserType(int value) {
+	CompetitorType(int value) {
 		type = value;
 	}
-
 }
