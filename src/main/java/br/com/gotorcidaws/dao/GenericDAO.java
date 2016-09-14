@@ -74,7 +74,7 @@ public class GenericDAO<T extends Serializable> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T findById(long id) {
+	public T findById(int id) {
 		return (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("id", id)).uniqueResult();
 	}
 	

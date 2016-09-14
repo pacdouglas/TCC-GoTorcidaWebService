@@ -2,17 +2,16 @@ package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.google.gson.Gson;
 
 @Entity(name="leagues")
 public class League implements Serializable {
@@ -36,11 +35,8 @@ public class League implements Serializable {
 	@Column(length = 100, nullable = false)
 	private String website;
 	
-	 @ManyToMany
-	 @JoinTable(name="league_competitors", joinColumns=
-	 {@JoinColumn(name="league_id")}, inverseJoinColumns=
-	   {@JoinColumn(name="competitor_id")})
-	List<Competitor> competitors;
+	@ManyToOne // (diversas ligas, N ligas possuem 1 esporte... Cardinalidade   * -> 1, ou, N -> 1)
+	private Sport sport;
 
 	public int getId() {
 		return id;
@@ -80,6 +76,14 @@ public class League implements Serializable {
 
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+
+	public Sport getSport() {
+		return sport;
+	}
+
+	public void setSport(Sport sport) {
+		this.sport = sport;
 	}
 
 	@Override
@@ -132,5 +136,9 @@ public class League implements Serializable {
 	public String toString() {
 		return "League [id=" + id + ", name=" + name + ", registrationDate=" + registrationDate + ", emailAddress="
 				+ emailAddress + ", website=" + website + "]";
+	}
+	
+	public String toJSON() {
+		return new Gson().toJson(this);
 	}
 }

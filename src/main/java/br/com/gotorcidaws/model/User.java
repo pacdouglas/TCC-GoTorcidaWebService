@@ -50,7 +50,7 @@ public class User implements Serializable {
 	@Column(length = 12)
 	private String celNumber;
 
-	@Column(nullable = false)
+	@Column() //@enumareted(enumtype.string)
 	private UserType userType;
 	
 	@Column(length = 1, nullable = false)
@@ -148,14 +148,6 @@ public class User implements Serializable {
 		this.password = password;
 	}
 	
-	public String getFirstAccess() {
-		return firstAccess;
-	}
-
-	public void setFirstAccess(String firstAccess) {
-		this.firstAccess = firstAccess;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;

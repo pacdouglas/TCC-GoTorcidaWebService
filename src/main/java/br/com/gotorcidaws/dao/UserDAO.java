@@ -16,7 +16,7 @@ public class UserDAO extends GenericDAO<User> {
 		super.update(user);
 	}
 
-	public void delete(long id) {
+	public void delete(int id) {
 		User u = findById(id);
 		super.delete(u);
 	}

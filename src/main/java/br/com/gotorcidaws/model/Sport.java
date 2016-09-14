@@ -7,14 +7,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Entity(name="sports")
+import com.google.gson.Gson;
+
+@Entity
 public class Sport implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 
 	@Column(length = 100, nullable = false)
 	private String name;
@@ -84,5 +86,9 @@ public class Sport implements Serializable {
 	public String toString() {
 		return "Sport [id=" + id + ", name=" + name + ", description=" + description + "]";
 	}
-	
+
+	public String toJSON() {
+		return new Gson().toJson(this);
+	}
+		
 }

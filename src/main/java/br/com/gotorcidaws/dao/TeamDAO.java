@@ -16,7 +16,7 @@ public class TeamDAO extends GenericDAO<Team> {
 		update(team);
 	}
 
-	public void delete(long id) {
+	public void delete(int id) {
 		Team t = findById(id);
 		delete(t);
 	}
@@ -25,7 +25,7 @@ public class TeamDAO extends GenericDAO<Team> {
 		return super.findByName(name);
 	}
 
-	public Team findByID(long id) {
+	public Team findByID(int id) {
 		return super.findById(id);
 	}
 

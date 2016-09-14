@@ -16,7 +16,7 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 		update(Athlete);
 	}
 
-	public void delete(long id) {
+	public void delete(int id) {
 		Athlete a = findById(id);
 		delete(a);
 	}
@@ -25,7 +25,7 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 		return super.findByUsername(name);
 	}
 
-	public Athlete findByID(long id) {
+	public Athlete findByID(int id) {
 		return super.findById(id);
 	}
 

@@ -1,10 +1,7 @@
 package br.com.gotorcidaws.services;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,7 +26,6 @@ public class UserService {
 		System.out.println(content);
 		
 		User user = (User) new Gson().fromJson(content, User.class);
-		user.setFirstAccess("S");
 		Message message = new Message();
 
 		try {
@@ -44,21 +40,4 @@ public class UserService {
 		
 	    return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
-
-	@Path("{id}")
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public Response alteraProduto(@PathParam("id") long id, String content) {
-		System.out.println(content);
-		User user = (User) new Gson().fromJson(content, User.class);
-
-		try {
-			dao.update(user);
-		} catch (Exception ex) {
-			return Response.serverError().build();
-		}
-		
-		return Response.ok().build();
-	}
-
 }
