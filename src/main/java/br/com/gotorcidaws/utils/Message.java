@@ -1,42 +1,46 @@
-package br.com.gotorcida.fw;
+package br.com.gotorcidaws.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import br.com.gotorcidaws.utils.json.JSONObject;
 
-public class Message {
-	private final JsonObject system;
-	private final JsonObject data;
+public class Message extends JSONObject {
+
+	private final JSONObject system;
+	private final JSONObject data;
 
 	public Message() {
-		system = new JsonObject();
-		data = new JsonObject();
+		system = new JSONObject();
+		data = new JSONObject();
 	}
 
-	public void addSystem(final String key, final String value) {
-		system.addProperty(key, value);
+	public String getData(String key) {
+		if (!data.has(key)) {
+			throw new MessageKeyNotFoundException("Specified value not found at message.");
+		}
+
+		return data.getString(key);
 	}
 
-	public void addData(final String key, final String value) {
-		data.addProperty(key, value);
+	public void add(String key, Object value) {
+		data.put(key, value);
 	}
 
-	public JsonPrimitive getData(String name) {
-		return data.getAsJsonObject().getAsJsonPrimitive(name);
+	public void setResponse(Integer code, String message) {
+		system.put("code", code);
+		system.put("message", message);
 	}
 
-	public JsonPrimitive getSystem(String name) {
-		return system.getAsJsonObject().getAsJsonPrimitive(name);
+	public JSONObject getResponse() {
+		JSONObject response = new JSONObject();
+		response.put("code", system.get("code"));
+		response.put("message", system.get("message"));
+		return response;
 	}
 
 	public String toJSON() {
-		return new Gson().toJson(this);
+		JSONObject object = new JSONObject();
+		object.put("system", system.toString());
+		object.put("data", data.toString());
+		return object.toString();
 	}
 
-	@Override
-	public String toString() {
-		return "Message [system=" + system + ", data=" + data + "]";
-	}
-	
-	
 }

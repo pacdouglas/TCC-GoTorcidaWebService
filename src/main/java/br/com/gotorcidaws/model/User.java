@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.google.gson.Gson;
-
 @Entity(name="users")
 public class User implements Serializable {
 
@@ -229,6 +227,6 @@ public class User implements Serializable {
 	}
 
 	public String toJSON() {
-		return new Gson().toJson(this);
+		return null;
 	}
 }

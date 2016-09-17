@@ -2,7 +2,6 @@ package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import com.google.gson.Gson;
 
 @Entity(name="leagues")
 public class League implements Serializable {
@@ -139,6 +136,6 @@ public class League implements Serializable {
 	}
 	
 	public String toJSON() {
-		return new Gson().toJson(this);
+		return null;
 	}
 }

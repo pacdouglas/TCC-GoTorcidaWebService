@@ -4,8 +4,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import br.com.gotorcida.fw.Message;
+
 import br.com.gotorcidaws.main.DatabaseGenerator;
+import br.com.gotorcidaws.utils.Message;
 
 @Path("database")
 public class DatabaseService {
@@ -17,12 +18,10 @@ public class DatabaseService {
 		Message message = new Message();
 		try {
 			DatabaseGenerator.createDatabase();
-			message.addSystem("code", "200");
-			message.addSystem("message", "Database criado com sucesso.");
+			message.setResponse(200, "Database criado com sucesso.");
 		} catch (Exception e) {
-			message.addSystem("code", "500");
-			message.addSystem("message", "Erro ao criar banco de dados.");
-			message.addData("errorMessage", e.getMessage());
+			message.setResponse(500, "Erro ao criar banco de dados.");
+			message.add("errorMessage", e.getMessage());
 		}
 
 		return message.toJSON();

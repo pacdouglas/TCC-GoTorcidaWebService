@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.google.gson.Gson;
-
 @Entity
 public class Sport implements Serializable {
 
@@ -88,7 +86,7 @@ public class Sport implements Serializable {
 	}
 
 	public String toJSON() {
-		return new Gson().toJson(this);
+		return null;
 	}
 		
 }

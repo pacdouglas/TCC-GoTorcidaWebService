@@ -5,37 +5,27 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.google.gson.Gson;
-
-import br.com.gotorcida.fw.Message;
 import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.User;
 
 @Path("user")
-public class UserService {
+public class UserService extends GoTorcidaService {
 
 	private final UserDAO dao = new UserDAO();
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(String content) {
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
-		System.out.println(content);
 		
-		User user = (User) new Gson().fromJson(content, User.class);
-		Message message = new Message();
-
+		User user = new User();
+		user.setId(Integer.parseInt(message.getData("id")));
+		
 		try {
 			dao.save(user);
-			message.addSystem("code", "200");
-			message.addSystem("message", "Você se cadastrou com sucesso!");
-			message.addData("usuario", user.toJSON());
+			message.setResponse(200, "Você se cadastrou com sucesso!");
+			message.add("usuario", user.toString());
 		} catch (Exception ex) {
-			message.addSystem("code", "401");
-			message.addSystem("message", "Nome de usuário já em uso.");
+			message.setResponse(401, "Nome de usuário já em uso.");
 		}
 		
 	    return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();

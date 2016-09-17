@@ -7,17 +7,14 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-
-import br.com.gotorcida.fw.Message;
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.SportDAO;
 import br.com.gotorcidaws.model.Sport;
+import br.com.gotorcidaws.utils.json.JSONArray;
+import br.com.gotorcidaws.utils.json.JSONObject;
 
 @Path("/sport")
-public class SportService {
+public class SportService extends GoTorcidaService {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -25,26 +22,20 @@ public class SportService {
 		
 		SportDAO sportDAO = DAOManager.getSportDAO();
 		
-		Message message = new Message();
+		List<Sport> sportsList;
 		
-		List<Sport> sports;
-		
+		JSONArray sportsArray = new JSONArray();
 		try {
-			sports = sportDAO.findAll();
+			sportsList = sportDAO.findAll();
 			
-			JsonArray arraySports = new JsonArray();
-			
-			for (int i = 0; i < sports.size(); i++) {
-				arraySports.add(new Gson().fromJson(sports.get(i).toJSON(), JsonElement.class));
+			for (int i = 0; i < sportsList.size(); i++) {
+				sportsArray.put(new JSONObject(sportsList.get(i)));
 			}
 			
-			message.addSystem("code", "200");
-			message.addSystem("message", "OK.");
-			message.addData("sports", arraySports.toString());	
+			message.add("sports", sportsArray);	
 		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação");
 			System.out.println(ex.getMessage());
-			message.addSystem("code", "500");
-			message.addSystem("message", "Erro interno da aplicação.");
 		}
 		
 		return message.toJSON();

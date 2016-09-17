@@ -3,7 +3,6 @@ package br.com.gotorcidaws.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
