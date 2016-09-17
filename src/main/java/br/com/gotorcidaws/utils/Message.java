@@ -20,13 +20,21 @@ public class Message extends JSONObject {
 		return data.getString(key);
 	}
 
-	public void add(String key, Object value) {
+	public void addData(String key, Object value) {
 		data.put(key, value);
 	}
 
 	public void setResponse(Integer code, String message) {
 		system.put("code", code);
 		system.put("message", message);
+	}
+	
+	public JSONObject getSystem() {
+		return system;
+	}
+
+	public JSONObject getData() {
+		return data;
 	}
 
 	public JSONObject getResponse() {

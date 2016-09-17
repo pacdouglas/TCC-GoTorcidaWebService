@@ -27,7 +27,7 @@ public class LoginService {
 		if (user != null) {
 			message.setResponse(200, "Login realizado com sucesso.");
 			JSONObject userJSON = new JSONObject(user);
-			message.add("usuario", userJSON.toString());
+			message.addData("usuario", userJSON.toString());
 		} else {
 			message.setResponse(401, "Usuário e/ou senha incorreto(s).");
 		}

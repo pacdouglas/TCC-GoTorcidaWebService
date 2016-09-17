@@ -21,7 +21,7 @@ public class DatabaseService {
 			message.setResponse(200, "Database criado com sucesso.");
 		} catch (Exception e) {
 			message.setResponse(500, "Erro ao criar banco de dados.");
-			message.add("errorMessage", e.getMessage());
+			message.addData("errorMessage", e.getMessage());
 		}
 
 		return message.toJSON();

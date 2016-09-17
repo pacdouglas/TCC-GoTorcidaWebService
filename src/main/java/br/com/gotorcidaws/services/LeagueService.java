@@ -7,7 +7,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.LeagueDAO;
 import br.com.gotorcidaws.dao.SportDAO;
@@ -48,7 +47,7 @@ public class LeagueService extends GoTorcidaService {
 			}
 
 			message.setResponse(200, "Ok.");
-			message.add("leagues", leaguesArray);
+			message.addData("leagues", leaguesArray);
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
 			ex.printStackTrace();

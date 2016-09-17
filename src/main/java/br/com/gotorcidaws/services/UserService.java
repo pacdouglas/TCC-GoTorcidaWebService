@@ -23,7 +23,7 @@ public class UserService extends GoTorcidaService {
 		try {
 			dao.save(user);
 			message.setResponse(200, "Você se cadastrou com sucesso!");
-			message.add("usuario", user.toString());
+			message.addData("usuario", user.toString());
 		} catch (Exception ex) {
 			message.setResponse(401, "Nome de usuário já em uso.");
 		}
