@@ -2,6 +2,7 @@ package br.com.gotorcidaws.test;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import br.com.gotorcidaws.model.Athlete;
+import br.com.gotorcidaws.model.Event;
 import br.com.gotorcidaws.model.League;
 import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
@@ -24,6 +25,7 @@ public class ServiceExecuteTest {
 		findTeam(); 
 		listAthletesFromTeam();
 		findAthlete();
+		listEvents();
 	}
 
 	public static void login() {
@@ -249,7 +251,7 @@ public class ServiceExecuteTest {
 
 		final JSONParser jParser = new JSONParser();
 
-		String teamID = "2";
+		String teamID = "1";
 		String userID = "1";
 		
 		try {
@@ -298,5 +300,29 @@ public class ServiceExecuteTest {
 
 		System.out.println("Finished tests\n\n");
 	}
+	
+	private static void listEvents() {
+		System.out.println("Starting tests : http://localhost:8080/gotorcidaws/event/ + params)");
+		final JSONParser jParser = new JSONParser();
+
+		try {
+			JSONObject result = jParser.getJSONFromUrl("http://localhost:8080/gotorcidaws/event/55/55");
+			Message resultJSON = JSONConverter.toInstanceOf(Message.class, result.toString());
+			System.out.println(resultJSON.toJSON());
+
+			JSONArray events = resultJSON.getData().getJSONArray("events");
+
+			for (int i = 0; i < events.length(); i++) {
+				Event event = JSONConverter.toInstanceOf(Event.class, events.getJSONObject(i).toString());
+				System.out.println(event.toString());
+
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		System.out.println("Finished tests\n\n");
+	}
+
 	
 }

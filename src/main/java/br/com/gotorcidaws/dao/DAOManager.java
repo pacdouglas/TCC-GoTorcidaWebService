@@ -21,4 +21,8 @@ public class DAOManager {
 	public static AthleteDAO getAthleteDAO() {
 		return new AthleteDAO();
 	}
+	
+	public static EventDAO getEventDAO() {
+		return new EventDAO();
+	}
 }

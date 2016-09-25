@@ -5,6 +5,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
+import br.com.gotorcidaws.model.Event;
 import br.com.gotorcidaws.model.League;
 import br.com.gotorcidaws.model.Team;
 
@@ -42,5 +43,12 @@ public class TeamDAO extends GenericDAO<Team> {
 		crit.add(Restrictions.eq("leaguesAlias.id", league.getId()));
 		return crit.list();
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<Team> findByEvent(Event event) {
+		Criteria crit = getSession().createCriteria(Team.class);
+		crit.createAlias("events", "eventsAlias");
+		crit.add(Restrictions.eq("eventsAlias.id", event.getId()));
+		return crit.list();
+	}
 }

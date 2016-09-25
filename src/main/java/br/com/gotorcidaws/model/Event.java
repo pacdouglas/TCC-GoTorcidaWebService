@@ -3,6 +3,7 @@ package br.com.gotorcidaws.model;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -39,6 +42,7 @@ public class Event implements Serializable {
 	
 	@JsonIgnore
 	@Column
+	@Temporal(TemporalType.DATE)
 	private Calendar date;
 	
 	@ManyToMany
@@ -102,6 +106,14 @@ public class Event implements Serializable {
 		this.date = date;
 	}
 
+	public List<Team> getParticipants() {
+		return participants;
+	}
+
+	public void setParticipants(List<Team> participants) {
+		this.participants = participants;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -163,7 +175,7 @@ public class Event implements Serializable {
 	@Override
 	public String toString() {
 		return "Event [id=" + id + ", name=" + name + ", description=" + description + ", location=" + location
-				+ ", latitude=" + latitude + ", longitude=" + longitude + ", date=" + date + "]";
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", date=" + date + ", participants="
+				+ participants + "]";
 	}
-	
 }
