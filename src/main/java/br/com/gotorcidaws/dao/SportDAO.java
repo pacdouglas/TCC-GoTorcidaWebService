@@ -21,10 +21,6 @@ public class SportDAO extends GenericDAO<Sport> {
 		delete(s);
 	}
 
-	public Sport findByName(String name) {
-		return super.findByUsername(name);
-	}
-
 	public Sport findByID(int id) {
 		return super.findById(id);
 	}

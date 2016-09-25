@@ -1,5 +1,7 @@
 package br.com.gotorcidaws.dao;
 
+import org.hibernate.criterion.Restrictions;
+
 import br.com.gotorcidaws.model.User;
 
 public class UserDAO extends GenericDAO<User> {
@@ -22,7 +24,8 @@ public class UserDAO extends GenericDAO<User> {
 	}
 
 	public User findByUsername(String username) {
-		return super.findByUsername(username);
+		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("username", username).ignoreCase())
+				.uniqueResult();
 	}
 
 }

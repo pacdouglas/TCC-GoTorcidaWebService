@@ -67,12 +67,6 @@ public class GenericDAO<T extends Serializable> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public T findByUsername(String username) {
-		return (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("username", username).ignoreCase())
-				.uniqueResult();
-	}
-
-	@SuppressWarnings("unchecked")
 	public T findById(int id) {
 		return (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("id", id)).uniqueResult();
 	}

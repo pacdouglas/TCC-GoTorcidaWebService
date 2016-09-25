@@ -5,7 +5,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.User;
 import br.com.gotorcidaws.utils.Message;
@@ -27,7 +26,7 @@ public class LoginService {
 		if (user != null) {
 			message.setResponse(200, "Login realizado com sucesso.");
 			JSONObject userJSON = new JSONObject(user);
-			message.addData("usuario", userJSON.toString());
+			message.addData("user", userJSON.toString());
 		} else {
 			message.setResponse(401, "Usuário e/ou senha incorreto(s).");
 		}

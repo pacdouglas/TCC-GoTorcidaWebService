@@ -11,10 +11,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity(name="teams")
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+@Entity
 public class Team implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -26,9 +29,10 @@ public class Team implements Serializable {
 	@Column(length = 100, nullable = false)
 	private String name;
 
-	@Column(nullable = false)
+	@ManyToOne // (diversas ligas, N ligas possuem 1 esporte... Cardinalidade * -> 1, ou, N -> 1)
 	private Sport sport;
 
+	@JsonIgnore
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Calendar registrationDate;
@@ -39,11 +43,20 @@ public class Team implements Serializable {
 	@Column(length = 100, nullable = false)
 	private String website;
 
-	 @ManyToMany
-	 @JoinTable(name="team_athletes", joinColumns=
-	 {@JoinColumn(name="team_id")}, inverseJoinColumns=
-	   {@JoinColumn(name="athlete_id")})
-	List<Athlete> athletes;
+	@ManyToMany
+	@JoinTable(name = "team_athletes", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "athlete_id") })
+	private List<Athlete> athletes;
+
+	@ManyToMany
+	@JoinTable(name = "league_teams", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "league_id") })
+	private List<League> leagues;
+
+	@ManyToMany
+	@JoinTable(name = "events_participants", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "event_id") })
+	private List<Event> events;
 
 	public int getId() {
 		return id;
@@ -97,7 +110,6 @@ public class Team implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((athletes == null) ? 0 : athletes.hashCode());
 		result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -116,11 +128,6 @@ public class Team implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Team other = (Team) obj;
-		if (athletes == null) {
-			if (other.athletes != null)
-				return false;
-		} else if (!athletes.equals(other.athletes))
-			return false;
 		if (emailAddress == null) {
 			if (other.emailAddress != null)
 				return false;
@@ -154,7 +161,6 @@ public class Team implements Serializable {
 	@Override
 	public String toString() {
 		return "Team [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + registrationDate
-				+ ", emailAddress=" + emailAddress + ", website=" + website + ", athletes=" + athletes + "]";
+				+ ", emailAddress=" + emailAddress + ", website=" + website + "]";
 	}
-
 }

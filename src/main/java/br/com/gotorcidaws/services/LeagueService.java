@@ -12,6 +12,7 @@ import br.com.gotorcidaws.dao.LeagueDAO;
 import br.com.gotorcidaws.dao.SportDAO;
 import br.com.gotorcidaws.model.League;
 import br.com.gotorcidaws.model.Sport;
+import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.json.JSONArray;
 import br.com.gotorcidaws.utils.json.JSONObject;
 
@@ -19,9 +20,9 @@ import br.com.gotorcidaws.utils.json.JSONObject;
 public class LeagueService extends GoTorcidaService {
 
 	@GET
-	@Path("{selectedSports}")
+	@Path("{userID}/{selectedSports}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listLeague(@PathParam("selectedSports") String selectedSports) throws Exception {
+	public String listLeague(@PathParam("userId") String userId, @PathParam("selectedSports") String selectedSports) throws Exception {
 
 		SportDAO sportDAO = DAOManager.getSportDAO();
 		LeagueDAO leagueDAO = DAOManager.getLeagueDAO();
@@ -48,6 +49,24 @@ public class LeagueService extends GoTorcidaService {
 
 			message.setResponse(200, "Ok.");
 			message.addData("leagues", leaguesArray);
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação");
+			ex.printStackTrace();
+		}
+
+		return message.toJSON();
+	}
+	
+	@GET
+	@Path("{leagueID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String findLeague(@PathParam("leagueID") String leagueID) throws Exception {
+		LeagueDAO leagueDAO = DAOManager.getLeagueDAO();
+		
+		try {
+			League league = leagueDAO.findById(Integer.parseInt(leagueID));
+			message.setResponse(200, "Ok.");
+			message.addData("league", JSONConverter.toJSON(league));
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
 			ex.printStackTrace();

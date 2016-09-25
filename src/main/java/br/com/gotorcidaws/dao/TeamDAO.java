@@ -1,5 +1,11 @@
 package br.com.gotorcidaws.dao;
 
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+
+import br.com.gotorcidaws.model.League;
 import br.com.gotorcidaws.model.Team;
 
 public class TeamDAO extends GenericDAO<Team> {
@@ -27,6 +33,14 @@ public class TeamDAO extends GenericDAO<Team> {
 
 	public Team findByID(int id) {
 		return super.findById(id);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Team> findByLeague(League league) {
+		Criteria crit = getSession().createCriteria(Team.class);
+		crit.createAlias("leagues", "leaguesAlias");
+		crit.add(Restrictions.eq("leaguesAlias.id", league.getId()));
+		return crit.list();
 	}
 
 }

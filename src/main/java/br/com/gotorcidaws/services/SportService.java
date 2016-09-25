@@ -32,7 +32,8 @@ public class SportService extends GoTorcidaService {
 				sportsArray.put(new JSONObject(sportsList.get(i)));
 			}
 			
-			message.addData("sports", sportsArray);	
+			message.addData("sports", sportsArray);
+			message.setResponse(200, "Ok.");	
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
 			System.out.println(ex.getMessage());
@@ -40,5 +41,7 @@ public class SportService extends GoTorcidaService {
 		
 		return message.toJSON();
 	}
-	
 }
+  
+  
+ 

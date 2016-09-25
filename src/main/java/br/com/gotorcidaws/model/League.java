@@ -2,38 +2,52 @@ package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity(name="leagues")
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+@Entity
 public class League implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	@Column(length = 70, nullable = false)
 	private String name;
-	
+
+	@JsonIgnore
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Calendar registrationDate;
-	
+
 	@Column(length = 100, nullable = false)
 	private String emailAddress;
 
 	@Column(length = 100, nullable = false)
 	private String website;
-	
-	@ManyToOne // (diversas ligas, N ligas possuem 1 esporte... Cardinalidade   * -> 1, ou, N -> 1)
+
+	@ManyToOne // (diversas ligas, N ligas possuem 1 esporte... Cardinalidade *
+				// -> 1, ou, N -> 1)
 	private Sport sport;
+
+	@ManyToMany
+	@JoinTable(name = "league_teams", joinColumns = { @JoinColumn(name = "league_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "team_id") })
+	private List<Team> teams;
 
 	public int getId() {
 		return id;
@@ -91,6 +105,7 @@ public class League implements Serializable {
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((registrationDate == null) ? 0 : registrationDate.hashCode());
+		result = prime * result + ((sport == null) ? 0 : sport.hashCode());
 		result = prime * result + ((website == null) ? 0 : website.hashCode());
 		return result;
 	}
@@ -121,6 +136,11 @@ public class League implements Serializable {
 				return false;
 		} else if (!registrationDate.equals(other.registrationDate))
 			return false;
+		if (sport == null) {
+			if (other.sport != null)
+				return false;
+		} else if (!sport.equals(other.sport))
+			return false;
 		if (website == null) {
 			if (other.website != null)
 				return false;
@@ -132,10 +152,6 @@ public class League implements Serializable {
 	@Override
 	public String toString() {
 		return "League [id=" + id + ", name=" + name + ", registrationDate=" + registrationDate + ", emailAddress="
-				+ emailAddress + ", website=" + website + "]";
-	}
-	
-	public String toJSON() {
-		return null;
+				+ emailAddress + ", website=" + website + ", sport=" + sport + "]";
 	}
 }

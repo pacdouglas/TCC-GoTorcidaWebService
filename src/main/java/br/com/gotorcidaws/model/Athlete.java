@@ -15,9 +15,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity(name="athletes")
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+@Entity
 public class Athlete implements Serializable {
 
+	@JsonIgnore
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -30,6 +33,7 @@ public class Athlete implements Serializable {
 	@ManyToOne
 	private Sport sport;
 
+	@JsonIgnore
 	@Temporal(TemporalType.DATE)
 	@Column
 	private Calendar registrationDate;
@@ -92,10 +96,6 @@ public class Athlete implements Serializable {
 
 	public void setWebsite(String website) {
 		this.website = website;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	@Override

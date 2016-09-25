@@ -14,7 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity(name="users")
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+@Entity
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -25,7 +27,7 @@ public class User implements Serializable {
 
 	@Column(length = 30, nullable = false)
 	private String username;
-	
+
 	@Column(length = 30, nullable = false)
 	private String password;
 
@@ -35,6 +37,7 @@ public class User implements Serializable {
 	@Column(length = 20, nullable = false)
 	private String nickname;
 
+	@JsonIgnore
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Calendar dateOfBirth;
@@ -48,24 +51,27 @@ public class User implements Serializable {
 	@Column(length = 12)
 	private String celNumber;
 
-	@Column() //@enumareted(enumtype.string)
+	@Column() // @enumareted(enumtype.string)
 	private UserType userType;
-	
+
 	@Column(length = 1, nullable = false)
 	private String firstAccess;
 
-	 @ManyToMany
-     @JoinTable(name="users_sports", joinColumns=
-     {@JoinColumn(name="user_id")}, inverseJoinColumns=
-       {@JoinColumn(name="sport_id")})
+	@ManyToMany
+	@JoinTable(name = "users_sports", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "sport_id") })
 	List<Sport> sports;
-	
-	 @ManyToMany
-     @JoinTable(name="users_teams", joinColumns=
-     {@JoinColumn(name="user_id")}, inverseJoinColumns=
-       {@JoinColumn(name="team_id")})
+
+	@ManyToMany
+	@JoinTable(name = "users_leagues", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "league_id") })
+	List<League> leagues;
+
+	@ManyToMany
+	@JoinTable(name = "users_teams", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "team_id") })
 	List<Team> teams;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -145,7 +151,19 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+	public void setSports(List<Sport> sports) {
+		this.sports = sports;
+	}
+
+	public void setLeagues(List<League> leagues) {
+		this.leagues = leagues;
+	}
+
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -224,9 +242,5 @@ public class User implements Serializable {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullName=" + fullName
 				+ ", nickname=" + nickname + ", dateOfBirth=" + dateOfBirth + ", emailAddress=" + emailAddress
 				+ ", telNumber=" + telNumber + ", celNumber=" + celNumber + ", userType=" + userType + "]";
-	}
-
-	public String toJSON() {
-		return null;
 	}
 }

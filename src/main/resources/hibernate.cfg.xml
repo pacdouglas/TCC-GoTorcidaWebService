@@ -15,6 +15,7 @@
 		<mapping class="br.com.gotorcidaws.model.Team" />
 		<mapping class="br.com.gotorcidaws.model.Athlete" />
 		<mapping class="br.com.gotorcidaws.model.League" />
+		<mapping class="br.com.gotorcidaws.model.Event" />
 	</session-factory>
 </hibernate-configuration> 
 

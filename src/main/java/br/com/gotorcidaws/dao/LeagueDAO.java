@@ -30,12 +30,6 @@ public class LeagueDAO extends GenericDAO<League> {
 	
 	@SuppressWarnings("unchecked")
 	public List<League> findBySport(Sport sport) {
-		
-		
-		/*Criteria cr = session.createCriteria(User.class)
-                .createCriteria("roles")
-                .add(Restrictions.or(Restrictions.eq("roletype", 1), Restrictions.eq("roletype", 2)));*/
-		
 		return getSession().createCriteria(League.class).add(Restrictions.eq("sport.id", sport.getId())).list();
 	}
 	
