@@ -6,10 +6,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.codehaus.jackson.map.ObjectMapper;
-
 import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.User;
+import br.com.gotorcidaws.utils.JSONConverter;
 
 @Path("user")
 public class UserService extends GoTorcidaService {
@@ -20,14 +19,7 @@ public class UserService extends GoTorcidaService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(String content) {
 		
-		ObjectMapper mapper = new ObjectMapper();
-		User user = null;
-		try {
-			user = mapper.readValue(content, User.class);
-		} catch (Exception ex) {
-			
-		}
-		
+		User user = JSONConverter.toInstanceOf(User.class, content);
 		try {
 			dao.save(user);
 			message.setResponse(200, "Você se cadastrou com sucesso!");

@@ -9,9 +9,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import br.com.gotorcidaws.dao.DAOManager;
-import br.com.gotorcidaws.dao.LeagueDAO;
+import br.com.gotorcidaws.dao.SportDAO;
 import br.com.gotorcidaws.dao.TeamDAO;
-import br.com.gotorcidaws.model.League;
+import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
 import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.json.JSONArray;
@@ -21,40 +21,39 @@ import br.com.gotorcidaws.utils.json.JSONObject;
 public class TeamService extends GoTorcidaService {
 
 	@GET
-	@Path("{userID}/{selectedLeagues}")
+	@Path("{userID}/{selectedSports}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listTeams(@PathParam("userId") String userId, @PathParam("selectedLeagues") String selectedLeagues) throws Exception {
-		LeagueDAO leagueDAO = DAOManager.getLeagueDAO();
+	public String listTeams(@PathParam("userId") String userId, @PathParam("selectedSports") String selectedSports) throws Exception {
 		TeamDAO teamDAO = DAOManager.getTeamDAO();
 		JSONArray teamsArray = new JSONArray();
 		
-		try {
-			JSONArray leaguesArray = new JSONArray(selectedLeagues);
+			SportDAO sportDAO = DAOManager.getSportDAO();
 			
-			for (int i = 0; i < leaguesArray.length(); i++) {
-				System.out.println(leaguesArray.getInt(i));
+			try {
+				JSONArray sportsArray = new JSONArray(selectedSports);
 				
-				League league = leagueDAO.findById(leaguesArray.getInt(i));
-				
-				if (league != null) {
-					JSONArray teamsFromLeague = new JSONArray();
-					List<Team> teamsList = teamDAO.findByLeague(league);
+				for (int i = 0; i < sportsArray.length(); i++) {
+					Sport sport = sportDAO.findById(sportsArray.getInt(i));
 					
-					for (int j = 0; j < teamsList.size(); j++) {
-						System.out.println(teamsList.get(j).toString());
-						teamsFromLeague.put(new JSONObject(teamsList.get(j)));
+					if (sport != null) {
+						JSONArray teamsFromSport = new JSONArray();
+						List<Team> teamsList = teamDAO.findBySport(sport);
+						
+						for (int j = 0; j < teamsList.size(); j++) {
+							System.out.println(teamsList.get(j).toString());
+							teamsFromSport.put(new JSONObject(teamsList.get(j)));
+						}
+						
+						teamsArray.put(teamsFromSport);
 					}
-					
-					teamsArray.put(teamsFromLeague);
 				}
+				
+				message.setResponse(200, "Ok.");
+				message.addData("teams", teamsArray);
+			} catch (Exception ex) {
+				message.setResponse(500, "Erro interno da aplicação");
+				ex.printStackTrace();
 			}
-			
-			message.setResponse(200, "Ok.");
-			message.addData("teams", teamsArray);
-		} catch (Exception ex) {
-			message.setResponse(500, "Erro interno da aplicação");
-			ex.printStackTrace();
-		}
 		
 		return message.toJSON();
 	}

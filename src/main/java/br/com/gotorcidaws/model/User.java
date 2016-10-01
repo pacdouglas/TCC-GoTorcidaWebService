@@ -63,11 +63,6 @@ public class User implements Serializable {
 	List<Sport> sports;
 
 	@ManyToMany
-	@JoinTable(name = "users_leagues", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "league_id") })
-	List<League> leagues;
-
-	@ManyToMany
 	@JoinTable(name = "users_teams", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "team_id") })
 	List<Team> teams;
@@ -154,10 +149,6 @@ public class User implements Serializable {
 
 	public void setSports(List<Sport> sports) {
 		this.sports = sports;
-	}
-
-	public void setLeagues(List<League> leagues) {
-		this.leagues = leagues;
 	}
 
 	public void setTeams(List<Team> teams) {

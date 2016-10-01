@@ -29,7 +29,8 @@ public class Team implements Serializable {
 	@Column(length = 100, nullable = false)
 	private String name;
 
-	@ManyToOne // (diversas ligas, N ligas possuem 1 esporte... Cardinalidade * -> 1, ou, N -> 1)
+	@ManyToOne // (diversas ligas, N ligas possuem 1 esporte... Cardinalidade *
+				// -> 1, ou, N -> 1)
 	private Sport sport;
 
 	@JsonIgnore
@@ -48,15 +49,8 @@ public class Team implements Serializable {
 			@JoinColumn(name = "athlete_id") })
 	private List<Athlete> athletes;
 
-	@ManyToMany
-	@JoinTable(name = "league_teams", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "league_id") })
-	private List<League> leagues;
-
-	@ManyToMany
-	@JoinTable(name = "events_participants", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "event_id") })
-	private List<Event> events;
+	@Column(length = 1, nullable = false)
+	private String active;
 
 	public int getId() {
 		return id;
@@ -106,10 +100,19 @@ public class Team implements Serializable {
 		this.website = website;
 	}
 
+	public String getActive() {
+		return active;
+	}
+
+	public void setActive(String active) {
+		this.active = active;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((active == null) ? 0 : active.hashCode());
 		result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
@@ -128,6 +131,11 @@ public class Team implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Team other = (Team) obj;
+		if (active == null) {
+			if (other.active != null)
+				return false;
+		} else if (!active.equals(other.active))
+			return false;
 		if (emailAddress == null) {
 			if (other.emailAddress != null)
 				return false;
@@ -161,6 +169,6 @@ public class Team implements Serializable {
 	@Override
 	public String toString() {
 		return "Team [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + registrationDate
-				+ ", emailAddress=" + emailAddress + ", website=" + website + "]";
+				+ ", emailAddress=" + emailAddress + ", website=" + website + ", active=" + active + "]";
 	}
 }

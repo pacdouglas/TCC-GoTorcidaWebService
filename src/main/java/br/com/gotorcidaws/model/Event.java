@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,31 +24,41 @@ public class Event implements Serializable {
 	@Id
 	@GeneratedValue
 	private int id;
-	
+
 	@Column
 	private String name;
-	
-	@Column
+
+	@Column(length = 500, nullable = false)
 	private String description;
-	
+
 	@Column
 	private String location;
-	
+
 	@Column
 	private Double latitude;
-	
+
 	@Column
 	private Double longitude;
-	
+
 	@JsonIgnore
 	@Column
 	@Temporal(TemporalType.DATE)
 	private Calendar date;
+
+	@ManyToOne
+	private Team team;
 	
-	@ManyToMany
-	@JoinTable(name = "events_participants", joinColumns = { @JoinColumn(name = "event_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "team_id") })
-	private List<Team> participants;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+	List<Cost> costs;
+	
+	@ManyToOne
+	private Team firstTeam;
+	
+	@ManyToOne
+	private Team secondTeam;
+	
+	@ManyToOne
+	private User eventOwner;
 
 	public int getId() {
 		return id;
@@ -106,12 +116,40 @@ public class Event implements Serializable {
 		this.date = date;
 	}
 
-	public List<Team> getParticipants() {
-		return participants;
+	public Team getTeam() {
+		return team;
 	}
 
-	public void setParticipants(List<Team> participants) {
-		this.participants = participants;
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
+	public Team getFirstTeam() {
+		return firstTeam;
+	}
+
+	public void setFirstTeam(Team firstTeam) {
+		this.firstTeam = firstTeam;
+	}
+
+	public Team getSecondTeam() {
+		return secondTeam;
+	}
+
+	public void setSecondTeam(Team secondTeam) {
+		this.secondTeam = secondTeam;
+	}
+
+	public User getEventOwner() {
+		return eventOwner;
+	}
+
+	public void setEventOwner(User eventOwner) {
+		this.eventOwner = eventOwner;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
@@ -120,11 +158,15 @@ public class Event implements Serializable {
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((eventOwner == null) ? 0 : eventOwner.hashCode());
+		result = prime * result + ((firstTeam == null) ? 0 : firstTeam.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((latitude == null) ? 0 : latitude.hashCode());
 		result = prime * result + ((location == null) ? 0 : location.hashCode());
 		result = prime * result + ((longitude == null) ? 0 : longitude.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((secondTeam == null) ? 0 : secondTeam.hashCode());
+		result = prime * result + ((team == null) ? 0 : team.hashCode());
 		return result;
 	}
 
@@ -146,6 +188,16 @@ public class Event implements Serializable {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
+			return false;
+		if (eventOwner == null) {
+			if (other.eventOwner != null)
+				return false;
+		} else if (!eventOwner.equals(other.eventOwner))
+			return false;
+		if (firstTeam == null) {
+			if (other.firstTeam != null)
+				return false;
+		} else if (!firstTeam.equals(other.firstTeam))
 			return false;
 		if (id != other.id)
 			return false;
@@ -169,13 +221,23 @@ public class Event implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
+		if (secondTeam == null) {
+			if (other.secondTeam != null)
+				return false;
+		} else if (!secondTeam.equals(other.secondTeam))
+			return false;
+		if (team == null) {
+			if (other.team != null)
+				return false;
+		} else if (!team.equals(other.team))
+			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "Event [id=" + id + ", name=" + name + ", description=" + description + ", location=" + location
-				+ ", latitude=" + latitude + ", longitude=" + longitude + ", date=" + date + ", participants="
-				+ participants + "]";
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", date=" + date + ", team=" + team
+				+ ", firstTeam=" + firstTeam + ", secondTeam=" + secondTeam + ", eventOwner=" + eventOwner + "]";
 	}
 }

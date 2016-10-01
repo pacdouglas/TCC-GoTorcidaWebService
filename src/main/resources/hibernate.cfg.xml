@@ -12,10 +12,11 @@
 		<property name="hbm2ddl.auto">update</property>
 		<mapping class="br.com.gotorcidaws.model.User" />
 		<mapping class="br.com.gotorcidaws.model.Sport" />
-		<mapping class="br.com.gotorcidaws.model.Team" />
 		<mapping class="br.com.gotorcidaws.model.Athlete" />
-		<mapping class="br.com.gotorcidaws.model.League" />
+		<mapping class="br.com.gotorcidaws.model.Team" />
 		<mapping class="br.com.gotorcidaws.model.Event" />
+		<mapping class="br.com.gotorcidaws.model.Cost" />
+
 	</session-factory>
 </hibernate-configuration> 
 

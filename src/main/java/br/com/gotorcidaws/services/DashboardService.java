@@ -10,11 +10,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import br.com.gotorcidaws.dao.DAOManager;
-import br.com.gotorcidaws.dao.LeagueDAO;
 import br.com.gotorcidaws.dao.SportDAO;
 import br.com.gotorcidaws.dao.TeamDAO;
 import br.com.gotorcidaws.dao.UserDAO;
-import br.com.gotorcidaws.model.League;
 import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
 import br.com.gotorcidaws.model.User;
@@ -27,7 +25,7 @@ public class DashboardService extends GoTorcidaService {
 	@Path("{userId}/{sports}/{leagues}/{teams}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String saveConfiguration(@PathParam("userId") String userId, @PathParam("sports") String sports,
-			@PathParam("leagues") String leagues, @PathParam("teams") String teams) throws Exception {
+			@PathParam("teams") String teams) throws Exception {
 
 		UserDAO userDAO = DAOManager.getUserDAO();
 		User user = userDAO.findById(Integer.parseInt(userId));
@@ -45,17 +43,6 @@ public class DashboardService extends GoTorcidaService {
 						user.setSports(sportsList);
 					}
 
-					if (leagues != null && !leagues.equals("")){
-						LeagueDAO leagueDAO = DAOManager.getLeagueDAO();
-						JSONArray leaguesArray = new JSONArray(leagues);
-						List<League> leaguesList = new ArrayList<>();
-						for (int i = 0; i < leaguesArray.length(); i++) {
-							leaguesList.add(leagueDAO.findByID(leaguesArray.getInt(i)));
-						}
-						
-						user.setLeagues(leaguesList);
-					}
-					
 					if (teams != null && !teams.equals("")){
 						TeamDAO teamDAO = DAOManager.getTeamDAO();
 						JSONArray teamsArray = new JSONArray(teams);
