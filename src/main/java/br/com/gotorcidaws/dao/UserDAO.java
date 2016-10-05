@@ -23,8 +23,8 @@ public class UserDAO extends GenericDAO<User> {
 		super.delete(u);
 	}
 
-	public User findByUsername(String username) {
-		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("username", username).ignoreCase())
+	public User findByEmail(String email) {
+		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("emailAddress", email).ignoreCase())
 				.uniqueResult();
 	}
 

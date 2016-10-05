@@ -52,6 +52,9 @@ public class Team implements Serializable {
 	@Column(length = 1, nullable = false)
 	private String active;
 
+	@Column(length = 500, nullable = false)
+	private String urlImage;
+	
 	public int getId() {
 		return id;
 	}
@@ -106,6 +109,14 @@ public class Team implements Serializable {
 
 	public void setActive(String active) {
 		this.active = active;
+	}
+
+	public String getUrlImage() {
+		return urlImage;
+	}
+
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class SportService extends GoTorcidaService {
 			message.setResponse(200, "Ok.");	
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
 		
 		return message.toJSON();

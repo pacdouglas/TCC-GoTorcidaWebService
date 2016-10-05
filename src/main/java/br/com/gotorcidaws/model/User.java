@@ -14,7 +14,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+import br.com.gotorcidaws.utils.DefaultDateDeserializer;
 
 @Entity
 public class User implements Serializable {
@@ -25,25 +27,22 @@ public class User implements Serializable {
 	@GeneratedValue
 	private int id;
 
-	@Column(length = 30, nullable = false)
-	private String username;
-
+	@Column(length = 100, nullable = false)
+	private String emailAddress;
+	
 	@Column(length = 30, nullable = false)
 	private String password;
 
-	@Column(length = 50, nullable = false)
+	@Column(length = 50)
 	private String fullName;
 
-	@Column(length = 20, nullable = false)
+	@Column(length = 20)
 	private String nickname;
 
-	@JsonIgnore
+	@JsonDeserialize(using=DefaultDateDeserializer.class)
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Calendar dateOfBirth;
-
-	@Column(length = 100, nullable = false)
-	private String emailAddress;
 
 	@Column(length = 12)
 	private String telNumber;
@@ -51,7 +50,7 @@ public class User implements Serializable {
 	@Column(length = 12)
 	private String celNumber;
 
-	@Column() // @enumareted(enumtype.string)
+	@Column // @enumareted(enumtype.string)
 	private UserType userType;
 
 	@Column(length = 1, nullable = false)
@@ -123,14 +122,6 @@ public class User implements Serializable {
 		this.celNumber = celNumber;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public UserType getUserType() {
 		return userType;
 	}
@@ -155,6 +146,14 @@ public class User implements Serializable {
 		this.teams = teams;
 	}
 
+	public String getFirstAccess() {
+		return firstAccess;
+	}
+
+	public void setFirstAccess(String firstAccess) {
+		this.firstAccess = firstAccess;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -162,13 +161,13 @@ public class User implements Serializable {
 		result = prime * result + ((celNumber == null) ? 0 : celNumber.hashCode());
 		result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
 		result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
+		result = prime * result + ((firstAccess == null) ? 0 : firstAccess.hashCode());
 		result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((nickname == null) ? 0 : nickname.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((telNumber == null) ? 0 : telNumber.hashCode());
 		result = prime * result + ((userType == null) ? 0 : userType.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -196,6 +195,11 @@ public class User implements Serializable {
 				return false;
 		} else if (!emailAddress.equals(other.emailAddress))
 			return false;
+		if (firstAccess == null) {
+			if (other.firstAccess != null)
+				return false;
+		} else if (!firstAccess.equals(other.firstAccess))
+			return false;
 		if (fullName == null) {
 			if (other.fullName != null)
 				return false;
@@ -220,18 +224,13 @@ public class User implements Serializable {
 			return false;
 		if (userType != other.userType)
 			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", fullName=" + fullName
-				+ ", nickname=" + nickname + ", dateOfBirth=" + dateOfBirth + ", emailAddress=" + emailAddress
-				+ ", telNumber=" + telNumber + ", celNumber=" + celNumber + ", userType=" + userType + "]";
+		return "User [id=" + id + ", emailAddress=" + emailAddress + ", password=" + password + ", fullName=" + fullName
+				+ ", nickname=" + nickname + ", dateOfBirth=" + dateOfBirth + ", telNumber=" + telNumber
+				+ ", celNumber=" + celNumber + ", userType=" + userType + ", firstAccess=" + firstAccess + "]";
 	}
 }

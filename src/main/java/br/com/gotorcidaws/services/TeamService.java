@@ -40,7 +40,6 @@ public class TeamService extends GoTorcidaService {
 						List<Team> teamsList = teamDAO.findBySport(sport);
 						
 						for (int j = 0; j < teamsList.size(); j++) {
-							System.out.println(teamsList.get(j).toString());
 							teamsFromSport.put(new JSONObject(teamsList.get(j)));
 						}
 						
