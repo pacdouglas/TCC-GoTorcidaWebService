@@ -55,6 +55,12 @@ public class Team implements Serializable {
 	@Column(length = 500, nullable = false)
 	private String urlImage;
 	
+	@JsonIgnore
+	@ManyToMany
+	@JoinTable(name = "users_teams", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "user_id") })
+	private List<User> users;
+	 
 	public int getId() {
 		return id;
 	}

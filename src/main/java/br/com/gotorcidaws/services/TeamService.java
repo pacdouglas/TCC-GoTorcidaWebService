@@ -11,9 +11,12 @@ import javax.ws.rs.core.MediaType;
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.SportDAO;
 import br.com.gotorcidaws.dao.TeamDAO;
+import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
+import br.com.gotorcidaws.model.User;
 import br.com.gotorcidaws.utils.JSONConverter;
+import br.com.gotorcidaws.utils.ServiceLogger;
 import br.com.gotorcidaws.utils.json.JSONArray;
 import br.com.gotorcidaws.utils.json.JSONObject;
 
@@ -21,39 +24,56 @@ import br.com.gotorcidaws.utils.json.JSONObject;
 public class TeamService extends GoTorcidaService {
 
 	@GET
-	@Path("{userID}/{selectedSports}")
+	@Path("{userId}/{selectedSports}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String listTeams(@PathParam("userId") String userId, @PathParam("selectedSports") String selectedSports) throws Exception {
 		TeamDAO teamDAO = DAOManager.getTeamDAO();
 		JSONArray teamsArray = new JSONArray();
 		
-			SportDAO sportDAO = DAOManager.getSportDAO();
-			
-			try {
-				JSONArray sportsArray = new JSONArray(selectedSports);
+		System.out.println(userId);
+		System.out.println(userId);
+		
+		try {
+			if (selectedSports.equals("user")){
+				UserDAO userDAO = DAOManager.getUserDAO();
+				User user = userDAO.findById(Integer.parseInt(userId));
 				
-				for (int i = 0; i < sportsArray.length(); i++) {
-					Sport sport = sportDAO.findById(sportsArray.getInt(i));
-					
-					if (sport != null) {
-						JSONArray teamsFromSport = new JSONArray();
-						List<Team> teamsList = teamDAO.findBySport(sport);
-						
-						for (int j = 0; j < teamsList.size(); j++) {
-							teamsFromSport.put(new JSONObject(teamsList.get(j)));
-						}
-						
-						teamsArray.put(teamsFromSport);
-					}
+				List<Team> teams = teamDAO.findByUser(user);
+				
+				for (int i = 0; i < teams.size(); i++) {
+					teamsArray.put(new JSONObject(teams.get(i)));
 				}
 				
-				message.setResponse(200, "Ok.");
-				message.addData("teams", teamsArray);
+			} else {
+				SportDAO sportDAO = DAOManager.getSportDAO();
+				
+					JSONArray sportsArray = new JSONArray(selectedSports);
+					
+					for (int i = 0; i < sportsArray.length(); i++) {
+						Sport sport = sportDAO.findById(sportsArray.getInt(i));
+						
+						if (sport != null) {
+							JSONArray teamsFromSport = new JSONArray();
+							List<Team> teamsList = teamDAO.findBySport(sport);
+							
+							for (int j = 0; j < teamsList.size(); j++) {
+								teamsFromSport.put(new JSONObject(teamsList.get(j)));
+							}
+							
+							teamsArray.put(teamsFromSport);
+						}
+					}
+			}
+					
+			message.setResponse(200, "Ok.");
+			message.addData("teams", teamsArray);
+			
 			} catch (Exception ex) {
 				message.setResponse(500, "Erro interno da aplicação");
 				ex.printStackTrace();
 			}
 		
+		ServiceLogger.sent(message.toJSON());
 		return message.toJSON();
 	}
 	
@@ -72,6 +92,7 @@ public class TeamService extends GoTorcidaService {
 			ex.printStackTrace();
 		}
 
+		ServiceLogger.sent(message.toJSON());
 		return message.toJSON();
 	}
 }

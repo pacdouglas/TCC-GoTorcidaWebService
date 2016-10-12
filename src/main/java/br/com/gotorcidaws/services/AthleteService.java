@@ -14,6 +14,7 @@ import br.com.gotorcidaws.dao.TeamDAO;
 import br.com.gotorcidaws.model.Athlete;
 import br.com.gotorcidaws.model.Team;
 import br.com.gotorcidaws.utils.JSONConverter;
+import br.com.gotorcidaws.utils.ServiceLogger;
 import br.com.gotorcidaws.utils.json.JSONArray;
 import br.com.gotorcidaws.utils.json.JSONObject;
 
@@ -21,9 +22,9 @@ import br.com.gotorcidaws.utils.json.JSONObject;
 public class AthleteService extends GoTorcidaService {
 
 	@GET
-	@Path("{userID}/{sportID}")
+	@Path("{userID}/{teamId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listAthletes(@PathParam("userID") String userID, @PathParam("sportID") String sportID) throws Exception {
+	public String listAthletes(@PathParam("userID") String userID, @PathParam("teamId") String teamId) throws Exception {
 
 		TeamDAO teamDAO = DAOManager.getTeamDAO();
 		AthleteDAO athleteDAO = DAOManager.getAthleteDAO();
@@ -31,9 +32,8 @@ public class AthleteService extends GoTorcidaService {
 		JSONArray athletesArray = new JSONArray();
 
 		try {
-			Team team = teamDAO.findById(Integer.parseInt(sportID));
+			Team team = teamDAO.findById(Integer.parseInt(teamId));
 			List<Athlete> athletesList = athleteDAO.findByTeam(team);
-					
 					
 			for (int j = 0; j < athletesList.size(); j++) {
 				athletesArray.put(new JSONObject(athletesList.get(j)));
@@ -46,6 +46,7 @@ public class AthleteService extends GoTorcidaService {
 			ex.printStackTrace();
 		}
 
+		ServiceLogger.sent(message.toJSON());
 		return message.toJSON();
 	}
 	

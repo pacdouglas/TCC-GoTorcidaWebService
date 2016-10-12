@@ -1,7 +1,6 @@
 package br.com.gotorcidaws.dao;
 
 import org.hibernate.criterion.Restrictions;
-
 import br.com.gotorcidaws.model.User;
 
 public class UserDAO extends GenericDAO<User> {
