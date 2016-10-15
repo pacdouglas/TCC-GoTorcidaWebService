@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -45,20 +46,20 @@ public class Event implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Calendar date;
 
-	@ManyToOne
-	private Team team;
-	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
 	List<Cost> costs;
-	
+
 	@ManyToOne
 	private Team firstTeam;
-	
+
 	@ManyToOne
 	private Team secondTeam;
-	
+
 	@ManyToOne
 	private User eventOwner;
+
+	@Transient
+	private String formatedRegistrationDate;
 
 	public int getId() {
 		return id;
@@ -116,14 +117,6 @@ public class Event implements Serializable {
 		this.date = date;
 	}
 
-	public Team getTeam() {
-		return team;
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
-	}
-
 	public Team getFirstTeam() {
 		return firstTeam;
 	}
@@ -152,6 +145,14 @@ public class Event implements Serializable {
 		return serialVersionUID;
 	}
 
+	public String getFormatedRegistrationDate() {
+		return formatedRegistrationDate;
+	}
+
+	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
+		this.formatedRegistrationDate = formatedRegistrationDate;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -166,7 +167,6 @@ public class Event implements Serializable {
 		result = prime * result + ((longitude == null) ? 0 : longitude.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((secondTeam == null) ? 0 : secondTeam.hashCode());
-		result = prime * result + ((team == null) ? 0 : team.hashCode());
 		return result;
 	}
 
@@ -226,18 +226,13 @@ public class Event implements Serializable {
 				return false;
 		} else if (!secondTeam.equals(other.secondTeam))
 			return false;
-		if (team == null) {
-			if (other.team != null)
-				return false;
-		} else if (!team.equals(other.team))
-			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "Event [id=" + id + ", name=" + name + ", description=" + description + ", location=" + location
-				+ ", latitude=" + latitude + ", longitude=" + longitude + ", date=" + date + ", team=" + team
-				+ ", firstTeam=" + firstTeam + ", secondTeam=" + secondTeam + ", eventOwner=" + eventOwner + "]";
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", date=" + date + ","
+						+ " firstTeam=" + firstTeam + ", secondTeam=" + secondTeam + ", eventOwner=" + eventOwner + "]";
 	}
 }

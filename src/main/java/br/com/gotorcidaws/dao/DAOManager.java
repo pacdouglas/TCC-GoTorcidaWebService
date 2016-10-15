@@ -18,7 +18,11 @@ public class DAOManager {
 		return new AthleteDAO();
 	}
 	
-	public static EventDAO getMatchDAO() {
+	public static EventDAO getEventDAO() {
 		return new EventDAO();
+	}
+	
+	public static NewsDAO getNewsDAO() {
+		return new NewsDAO();
 	}
 }

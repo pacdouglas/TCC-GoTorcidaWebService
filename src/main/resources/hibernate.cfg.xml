@@ -7,8 +7,8 @@
 		<property name="hibernate.connection.url">jdbc:mysql://localhost/gotorcidaws</property>
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="hibernate.show_sql">true</property>
-		<property name="hibernate.format_sql">true</property>
+		<property name="hibernate.show_sql">false</property>
+		<property name="hibernate.format_sql">false</property>
 		<property name="hbm2ddl.auto">update</property>
 		<mapping class="br.com.gotorcidaws.model.User" />
 		<mapping class="br.com.gotorcidaws.model.Sport" />
@@ -16,7 +16,7 @@
 		<mapping class="br.com.gotorcidaws.model.Team" />
 		<mapping class="br.com.gotorcidaws.model.Event" />
 		<mapping class="br.com.gotorcidaws.model.Cost" />
-
+		<mapping class="br.com.gotorcidaws.model.News" />
 	</session-factory>
 </hibernate-configuration> 
 

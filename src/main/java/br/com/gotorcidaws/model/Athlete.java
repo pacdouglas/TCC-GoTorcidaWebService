@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -44,14 +45,14 @@ public class Athlete implements Serializable {
 	@Column
 	private String website;
 
-	 @ManyToMany
-	 @JoinTable(name="team_athletes", joinColumns=
-	 {@JoinColumn(name="athlete_id")}, inverseJoinColumns=
-	   {@JoinColumn(name="team_id")})
+	@ManyToMany
+	@JoinTable(name = "team_athletes", joinColumns = { @JoinColumn(name = "athlete_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "team_id") })
 	List<Team> teams;
 
+	@Transient
 	private String formatedRegistrationDate;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -99,7 +100,7 @@ public class Athlete implements Serializable {
 	public void setWebsite(String website) {
 		this.website = website;
 	}
-	
+
 	public String getFormatedRegistrationDate() {
 		return formatedRegistrationDate;
 	}

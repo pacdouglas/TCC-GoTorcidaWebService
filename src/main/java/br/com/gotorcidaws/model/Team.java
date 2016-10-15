@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -61,6 +62,7 @@ public class Team implements Serializable {
 			@JoinColumn(name = "user_id") })
 	private List<User> users;
 	 
+	@Transient
 	private String formatedRegistrationDate;
 	
 	public int getId() {
