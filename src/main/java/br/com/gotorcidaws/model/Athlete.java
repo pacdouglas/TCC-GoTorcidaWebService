@@ -49,7 +49,9 @@ public class Athlete implements Serializable {
 	 {@JoinColumn(name="athlete_id")}, inverseJoinColumns=
 	   {@JoinColumn(name="team_id")})
 	List<Team> teams;
-	 
+
+	private String formatedRegistrationDate;
+	
 	public int getId() {
 		return id;
 	}
@@ -96,6 +98,14 @@ public class Athlete implements Serializable {
 
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+	
+	public String getFormatedRegistrationDate() {
+		return formatedRegistrationDate;
+	}
+
+	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
+		this.formatedRegistrationDate = formatedRegistrationDate;
 	}
 
 	@Override

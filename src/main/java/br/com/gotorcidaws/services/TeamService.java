@@ -1,5 +1,6 @@
 package br.com.gotorcidaws.services;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -29,9 +30,7 @@ public class TeamService extends GoTorcidaService {
 	public String listTeams(@PathParam("userId") String userId, @PathParam("selectedSports") String selectedSports) throws Exception {
 		TeamDAO teamDAO = DAOManager.getTeamDAO();
 		JSONArray teamsArray = new JSONArray();
-		
-		System.out.println(userId);
-		System.out.println(userId);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		try {
 			if (selectedSports.equals("user")){
@@ -41,9 +40,10 @@ public class TeamService extends GoTorcidaService {
 				List<Team> teams = teamDAO.findByUser(user);
 				
 				for (int i = 0; i < teams.size(); i++) {
-					teamsArray.put(new JSONObject(teams.get(i)));
+					Team team = teams.get(i);
+					team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime())); 
+					teamsArray.put(new JSONObject(team));
 				}
-				
 			} else {
 				SportDAO sportDAO = DAOManager.getSportDAO();
 				
@@ -57,7 +57,9 @@ public class TeamService extends GoTorcidaService {
 							List<Team> teamsList = teamDAO.findBySport(sport);
 							
 							for (int j = 0; j < teamsList.size(); j++) {
-								teamsFromSport.put(new JSONObject(teamsList.get(j)));
+								Team team = teamsList.get(j);
+								team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime())); 
+								teamsFromSport.put(new JSONObject(team));
 							}
 							
 							teamsArray.put(teamsFromSport);
@@ -79,12 +81,14 @@ public class TeamService extends GoTorcidaService {
 	
 	@GET
 	@Path("{teamID}")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)	
 	public String findTeam(@PathParam("teamID") String teamID) throws Exception {
 		TeamDAO teamDAO = DAOManager.getTeamDAO();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		try {
 			Team team = teamDAO.findById(Integer.parseInt(teamID));
+			team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime()));
 			message.setResponse(200, "Ok.");
 			message.addData("team", JSONConverter.toJSON(team));
 		} catch (Exception ex) {

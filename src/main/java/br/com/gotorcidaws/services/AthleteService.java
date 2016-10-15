@@ -1,5 +1,6 @@
 package br.com.gotorcidaws.services;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -28,6 +29,7 @@ public class AthleteService extends GoTorcidaService {
 
 		TeamDAO teamDAO = DAOManager.getTeamDAO();
 		AthleteDAO athleteDAO = DAOManager.getAthleteDAO();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		JSONArray athletesArray = new JSONArray();
 
@@ -36,7 +38,9 @@ public class AthleteService extends GoTorcidaService {
 			List<Athlete> athletesList = athleteDAO.findByTeam(team);
 					
 			for (int j = 0; j < athletesList.size(); j++) {
-				athletesArray.put(new JSONObject(athletesList.get(j)));
+				Athlete athlete = athletesList.get(j);
+				athlete.setFormatedRegistrationDate(dateFormat.format(athlete.getRegistrationDate().getTime()));
+				athletesArray.put(new JSONObject(athlete));
 			}
 
 			message.setResponse(200, "Ok.");
@@ -55,9 +59,11 @@ public class AthleteService extends GoTorcidaService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String findAthlete(@PathParam("athleteID") String athleteID) throws Exception {
 		AthleteDAO athleteDAO = DAOManager.getAthleteDAO();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		try {
 			Athlete athlete = athleteDAO.findById(Integer.parseInt(athleteID));
+			athlete.setFormatedRegistrationDate(dateFormat.format(athlete.getRegistrationDate().getTime()));
 			message.setResponse(200, "Ok.");
 			message.addData("athlete", JSONConverter.toJSON(athlete));
 		} catch (Exception ex) {

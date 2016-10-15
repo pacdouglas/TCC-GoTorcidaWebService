@@ -61,6 +61,8 @@ public class Team implements Serializable {
 			@JoinColumn(name = "user_id") })
 	private List<User> users;
 	 
+	private String formatedRegistrationDate;
+	
 	public int getId() {
 		return id;
 	}
@@ -125,6 +127,14 @@ public class Team implements Serializable {
 		this.urlImage = urlImage;
 	}
 
+	public String getFormatedRegistrationDate() {
+		return formatedRegistrationDate;
+	}
+
+	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
+		this.formatedRegistrationDate = formatedRegistrationDate;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -185,7 +195,8 @@ public class Team implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Team [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + registrationDate
-				+ ", emailAddress=" + emailAddress + ", website=" + website + ", active=" + active + "]";
+		return "Team [id=" + id + ", name=" + name + ", sport=" + sport + ", emailAddress=" + emailAddress + ", website=" + website + ", active=" + active + ", urlImage="
+				+ urlImage + ", formatedRegistrationDate=" + formatedRegistrationDate + "]";
 	}
+	
 }

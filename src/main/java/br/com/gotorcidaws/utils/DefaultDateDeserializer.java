@@ -12,7 +12,7 @@ import org.codehaus.jackson.map.JsonDeserializer;
 
 public class DefaultDateDeserializer extends JsonDeserializer<Calendar> {
 
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/mm/YYYY");
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
 	@Override
 	public Calendar deserialize(JsonParser paramJsonParser, DeserializationContext paramDeserializationContext)
