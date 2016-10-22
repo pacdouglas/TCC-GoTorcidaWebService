@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.User;
+import br.com.gotorcidaws.model.UserType;
 import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.ServiceLogger;
 import br.com.gotorcidaws.utils.json.JSONObject;
@@ -47,6 +48,7 @@ public class UserService extends GoTorcidaService {
 		
 		User user = JSONConverter.toInstanceOf(User.class, content);
 		user.setFirstAccess("S");
+		user.setUserType(UserType.Normal);
 		
 		if (userDAO.findByEmail(user.getEmailAddress()) != null){
 			message.setResponse(500, "E-mail já cadastrado.");
