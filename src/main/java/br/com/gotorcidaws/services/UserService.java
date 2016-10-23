@@ -39,6 +39,31 @@ public class UserService extends GoTorcidaService {
 		return message.toJSON();
 	}
 	
+	@GET
+	@Path("find/{email}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String findUser(@PathParam("email") String email) {
+		UserDAO userDAO = DAOManager.getUserDAO();
+		ServiceLogger.received(email);
+		
+		try {
+			User user = userDAO.findByEmail(email);
+			
+			if (user != null) {
+				message.setResponse(200, "Ok");
+				message.addData("user", new JSONObject(user));
+			} else {
+				message.setResponse(404, "Usuário não encontrado");
+			}
+		} catch (Exception ex) {
+			message.setResponse(500, "Ocorreu algum erro interno no servidor.");
+			ex.printStackTrace();
+		}
+		
+		ServiceLogger.sent(message.toJSON());
+		return message.toJSON();
+	}
+	
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(String content) {

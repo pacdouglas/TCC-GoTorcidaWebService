@@ -63,6 +63,27 @@ public class NewsService extends GoTorcidaService {
 		return message.toJSON();
 	}
 	
+	@GET
+	@Path("find/{newsId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String findNews(@PathParam("newsId") String newsId) {
+		ServiceLogger.received(newsId);
+		
+		try {
+			NewsDAO newsDAO = DAOManager.getNewsDAO();
+			News news = newsDAO.findByID(Integer.parseInt(newsId));
+			
+			message.setResponse(200,  "Ok.");
+			message.addData("news", new JSONObject(news));
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação");
+			ex.printStackTrace();
+		}
+		
+		ServiceLogger.sent(message.toJSON());
+		return message.toJSON();
+	}
+	
 	private List<News> updateNewsDate(List<News> news) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
