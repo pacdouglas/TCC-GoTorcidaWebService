@@ -25,4 +25,8 @@ public class DAOManager {
 	public static NewsDAO getNewsDAO() {
 		return new NewsDAO();
 	}
+	
+	public static EventResultDAO getEventResultDAO() {
+		return new EventResultDAO();
+	}
 }

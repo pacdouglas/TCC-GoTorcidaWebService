@@ -3,6 +3,10 @@ package br.com.gotorcidaws.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+
 import br.com.gotorcidaws.model.Event;
 
 public class EventDAO extends GenericDAO<Event> {
@@ -51,5 +55,14 @@ public class EventDAO extends GenericDAO<Event> {
 				* Math.cos(Math.toRadians(latitude)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
 		double c = 2 * Math.asin(Math.sqrt(a));
 		return (6366000 * c) / 1000;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Event> listEventsByTeam(String teamID) {
+		Criteria criteria = getSession().createCriteria(Event.class); 
+		Criterion criteriaFirstTeam = Restrictions.eq("firstTeam", teamID);
+		Criterion criteriaSecondTeam = Restrictions.eq("secondTeam", teamID);
+		criteria.add(Restrictions.or(criteriaFirstTeam, criteriaSecondTeam));
+		return criteria.list();
 	}
 }

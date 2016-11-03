@@ -59,6 +59,9 @@ public class Event implements Serializable {
 	private User eventOwner;
 
 	@Transient
+	private EventResult result;
+	
+	@Transient
 	private String formatedRegistrationDate;
 
 	public int getId() {
@@ -151,6 +154,14 @@ public class Event implements Serializable {
 
 	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
 		this.formatedRegistrationDate = formatedRegistrationDate;
+	}
+	
+	public EventResult getResult() {
+		return result;
+	}
+
+	public void setResult(EventResult result) {
+		this.result = result;
 	}
 
 	@Override

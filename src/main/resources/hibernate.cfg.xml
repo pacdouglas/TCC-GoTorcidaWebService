@@ -15,6 +15,7 @@
 		<mapping class="br.com.gotorcidaws.model.Athlete" />
 		<mapping class="br.com.gotorcidaws.model.Team" />
 		<mapping class="br.com.gotorcidaws.model.Event" />
+		<mapping class="br.com.gotorcidaws.model.EventResult" />
 		<mapping class="br.com.gotorcidaws.model.Cost" />
 		<mapping class="br.com.gotorcidaws.model.News" />
 	</session-factory>
