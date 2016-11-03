@@ -1,7 +1,7 @@
 package br.com.gotorcidaws.model;
 
 public enum UserType {
-	Normal(1), Team(2), League(3);
+	Normal(0), Team(1);
 
 	public int type;
 

@@ -66,6 +66,11 @@ public class User implements Serializable {
 			@JoinColumn(name = "team_id") })
 	List<Team> teams;
 
+	@ManyToMany
+	@JoinTable(name = "admin_user_teams", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
+			@JoinColumn(name = "team_id") })
+	List<Team> managed_teams;
+	
 	public int getId() {
 		return id;
 	}
@@ -144,6 +149,10 @@ public class User implements Serializable {
 
 	public void setTeams(List<Team> teams) {
 		this.teams = teams;
+	}
+
+	public void setManaged_teams(List<Team> managed_teams) {
+		this.managed_teams = managed_teams;
 	}
 
 	public String getFirstAccess() {
@@ -232,5 +241,9 @@ public class User implements Serializable {
 		return "User [id=" + id + ", emailAddress=" + emailAddress + ", password=" + password + ", fullName=" + fullName
 				+ ", nickname=" + nickname + ", dateOfBirth=" + dateOfBirth + ", telNumber=" + telNumber
 				+ ", celNumber=" + celNumber + ", userType=" + userType + ", firstAccess=" + firstAccess + "]";
+	}
+
+	public List<Team> getManagedTeams() {
+		return this.managed_teams;
 	}
 }
