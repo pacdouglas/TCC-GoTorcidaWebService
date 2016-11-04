@@ -4,15 +4,18 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.NewsDAO;
 import br.com.gotorcidaws.model.News;
 import br.com.gotorcidaws.model.Team;
+import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.ServiceLogger;
 import br.com.gotorcidaws.utils.json.JSONArray;
 import br.com.gotorcidaws.utils.json.JSONObject;
@@ -93,5 +96,25 @@ public class NewsService extends GoTorcidaService {
 		}
 		
 		return news;
+	}
+	
+	@POST
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response save(String content) {
+		NewsDAO newsDAO = DAOManager.getNewsDAO();
+		ServiceLogger.received(content);
+
+		News news = JSONConverter.toInstanceOf(News.class, content);
+
+		try {
+			newsDAO.save(news);
+			message.setResponse(200, "Notícia criada com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
 }

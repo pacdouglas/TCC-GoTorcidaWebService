@@ -68,14 +68,14 @@ public class UserService extends GoTorcidaService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(String content) {
 		UserDAO userDAO = DAOManager.getUserDAO();
-		
+
 		ServiceLogger.received(content);
-		
+
 		User user = JSONConverter.toInstanceOf(User.class, content);
 		user.setFirstAccess("S");
 		user.setUserType(UserType.Normal);
-		
-		if (userDAO.findByEmail(user.getEmailAddress()) != null){
+
+		if (userDAO.findByEmail(user.getEmailAddress()) != null) {
 			message.setResponse(500, "E-mail já cadastrado.");
 		} else {
 			try {
@@ -87,9 +87,9 @@ public class UserService extends GoTorcidaService {
 				ex.printStackTrace();
 			}
 		}
-		
+
 		ServiceLogger.sent(message.toJSON());
-		
+
 		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
 }

@@ -30,8 +30,7 @@ public class Team implements Serializable {
 	@Column(length = 100, nullable = false)
 	private String name;
 
-	@ManyToOne // (diversas ligas, N ligas possuem 1 esporte... Cardinalidade *
-				// -> 1, ou, N -> 1)
+	@ManyToOne
 	private Sport sport;
 
 	@JsonIgnore

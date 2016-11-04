@@ -59,12 +59,12 @@ public class User implements Serializable {
 	@ManyToMany
 	@JoinTable(name = "users_sports", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "sport_id") })
-	List<Sport> sports;
+	private List<Sport> sports;
 
 	@ManyToMany
 	@JoinTable(name = "users_teams", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "team_id") })
-	List<Team> teams;
+	private List<Team> teams;
 
 	@ManyToMany
 	@JoinTable(name = "admin_user_teams", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
@@ -246,4 +246,9 @@ public class User implements Serializable {
 	public List<Team> getManagedTeams() {
 		return this.managed_teams;
 	}
+
+	public List<Team> getTeams() {
+		return teams;
+	}
+	
 }

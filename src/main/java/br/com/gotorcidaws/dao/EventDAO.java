@@ -8,6 +8,8 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.gotorcidaws.model.Event;
+import br.com.gotorcidaws.model.Team;
+import br.com.gotorcidaws.model.User;
 
 public class EventDAO extends GenericDAO<Event> {
 
@@ -59,10 +61,25 @@ public class EventDAO extends GenericDAO<Event> {
 
 	@SuppressWarnings("unchecked")
 	public List<Event> listEventsByTeam(String teamID) {
-		Criteria criteria = getSession().createCriteria(Event.class); 
-		Criterion criteriaFirstTeam = Restrictions.eq("firstTeam", teamID);
-		Criterion criteriaSecondTeam = Restrictions.eq("secondTeam", teamID);
+		Criteria criteria = getSession().createCriteria(Event.class);
+		Criterion criteriaFirstTeam = Restrictions.eq("firstTeam.id", Integer.parseInt(teamID));
+		Criterion criteriaSecondTeam = Restrictions.eq("secondTeam.id", Integer.parseInt(teamID));
 		criteria.add(Restrictions.or(criteriaFirstTeam, criteriaSecondTeam));
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Event> listEventsByUserTeams(String userID) {
+		Criteria criteria = getSession().createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", Integer.parseInt(userID)));
+		User user = (User) criteria.uniqueResult();
+		List<Team> userTeams = user.getTeams();
+		
+		criteria = getSession().createCriteria(Event.class);
+		Criterion criteriaFirstTeam = Restrictions.in("firstTeam", userTeams);
+		Criterion criteriaSecondTeam = Restrictions.in("secondTeam", userTeams);
+		criteria.add(Restrictions.or(criteriaFirstTeam, criteriaSecondTeam));
+		
 		return criteria.list();
 	}
 }
