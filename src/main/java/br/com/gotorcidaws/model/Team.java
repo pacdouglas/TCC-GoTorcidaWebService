@@ -3,7 +3,6 @@ package br.com.gotorcidaws.model;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -60,7 +59,10 @@ public class Team implements Serializable {
 	@JoinTable(name = "users_teams", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "user_id") })
 	private List<User> users;
-	 
+	
+	@Column(nullable = false)
+	private String teamType; //G = group - I = individual
+	
 	@Transient
 	private String formatedRegistrationDate;
 	
@@ -134,6 +136,14 @@ public class Team implements Serializable {
 
 	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
 		this.formatedRegistrationDate = formatedRegistrationDate;
+	}
+
+	public String getTeamType() {
+		return teamType;
+	}
+
+	public void setTeamType(String teamType) {
+		this.teamType = teamType;
 	}
 
 	@Override

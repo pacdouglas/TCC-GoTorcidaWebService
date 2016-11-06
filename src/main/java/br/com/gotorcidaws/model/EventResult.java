@@ -1,11 +1,14 @@
 package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 @Entity
 public class EventResult implements Serializable {
@@ -16,6 +19,7 @@ public class EventResult implements Serializable {
 	@GeneratedValue
 	private int id;
 
+	@JsonIgnore
 	@OneToOne
 	private Event event;
 

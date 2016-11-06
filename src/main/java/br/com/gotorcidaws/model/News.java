@@ -13,6 +13,9 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+import br.com.gotorcidaws.utils.DefaultDateDeserializer;
 
 @Entity
 public class News implements Serializable {
@@ -29,7 +32,7 @@ public class News implements Serializable {
 	@Column(nullable = false, length = 3500)
 	private String description;
 
-	@JsonIgnore
+	@JsonDeserialize(using=DefaultDateDeserializer.class)
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Calendar date;

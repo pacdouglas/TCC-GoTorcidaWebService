@@ -36,7 +36,7 @@ public class EventService extends GoTorcidaService {
 
 		try {
 			Event event = eventDAO.findById(Integer.parseInt(eventId));
-			event.setFormatedRegistrationDate(dateFormat.format(event.getDate().getTime()));
+			event.setFormatedEventDate(dateFormat.format(event.getDate().getTime()));
 			message.setResponse(200, "Ok.");
 			message.addData("event", new JSONObject(event));
 		} catch (Exception ex) {
@@ -48,6 +48,34 @@ public class EventService extends GoTorcidaService {
 		return message.toJSON();
 	}
 
+	@GET
+	@Path("listBySport/{userID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String listEventsBySport(@PathParam("userID") String userID) {
+		ServiceLogger.received("User ID: " + userID);
+		EventDAO eventDAO = DAOManager.getEventDAO();
+
+		try {
+			List<Event> events = eventDAO.listEventsBySport(userID);
+			events = updateEventsDate(events);
+			events = setEventsResult(events);
+
+			JSONArray eventsArray = new JSONArray();
+			for (int i = 0; i < events.size(); i++) {
+				eventsArray.put(new JSONObject(JSONConverter.toJSON(events.get(i))));
+			}
+
+			message.setResponse(200, "Ok.");
+			message.addData("eventsList", eventsArray);
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação");
+			ex.printStackTrace();
+		}
+
+		ServiceLogger.sent(message.toJSON());
+		return message.toJSON();
+	}
+	
 	@GET
 	@Path("listByUser/{userID}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -62,7 +90,7 @@ public class EventService extends GoTorcidaService {
 
 			JSONArray eventsArray = new JSONArray();
 			for (int i = 0; i < events.size(); i++) {
-				eventsArray.put(new JSONObject(events.get(i)));
+				eventsArray.put(new JSONObject(JSONConverter.toJSON(events.get(i))));
 			}
 
 			message.setResponse(200, "Ok.");
@@ -90,7 +118,7 @@ public class EventService extends GoTorcidaService {
 
 			JSONArray eventsArray = new JSONArray();
 			for (int i = 0; i < events.size(); i++) {
-				eventsArray.put(new JSONObject(events.get(i)));
+				eventsArray.put(new JSONObject(JSONConverter.toJSON(events.get(i))));
 			}
 
 			message.setResponse(200, "Ok.");
@@ -143,7 +171,7 @@ public class EventService extends GoTorcidaService {
 
 		for (int i = 0; i < events.size(); i++) {
 			Event event = events.get(i);
-			event.setFormatedRegistrationDate(dateFormat.format(event.getDate().getTime()));
+			event.setFormatedEventDate(dateFormat.format(event.getDate().getTime()));
 		}
 
 		return events;

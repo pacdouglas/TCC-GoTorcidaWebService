@@ -2,15 +2,12 @@ package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -46,8 +43,8 @@ public class Event implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Calendar date;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
-	List<Cost> costs;
+	@Column
+	private String costs;
 
 	@ManyToOne
 	private Team firstTeam;
@@ -55,6 +52,7 @@ public class Event implements Serializable {
 	@ManyToOne
 	private Team secondTeam;
 
+	@JsonIgnore
 	@ManyToOne
 	private User eventOwner;
 
@@ -62,8 +60,12 @@ public class Event implements Serializable {
 	private EventResult result;
 	
 	@Transient
-	private String formatedRegistrationDate;
+	private String formatedEventDate;
 
+	@JsonIgnore
+	@ManyToOne
+	private Sport sport;
+	
 	public int getId() {
 		return id;
 	}
@@ -147,21 +149,37 @@ public class Event implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
-	public String getFormatedRegistrationDate() {
-		return formatedRegistrationDate;
-	}
-
-	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
-		this.formatedRegistrationDate = formatedRegistrationDate;
-	}
 	
+	public String getFormatedEventDate() {
+		return formatedEventDate;
+	}
+
+	public void setFormatedEventDate(String formatedEventDate) {
+		this.formatedEventDate = formatedEventDate;
+	}
+
 	public EventResult getResult() {
 		return result;
 	}
 
 	public void setResult(EventResult result) {
 		this.result = result;
+	}
+	
+	public String getCosts() {
+		return costs;
+	}
+
+	public void setCosts(String costs) {
+		this.costs = costs;
+	}
+	
+	public Sport getSport() {
+		return sport;
+	}
+
+	public void setSport(Sport sport) {
+		this.sport = sport;
 	}
 
 	@Override

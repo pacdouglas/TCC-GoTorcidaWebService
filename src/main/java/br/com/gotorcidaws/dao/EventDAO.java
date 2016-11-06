@@ -1,13 +1,16 @@
 package br.com.gotorcidaws.dao;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.gotorcidaws.model.Event;
+import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
 import br.com.gotorcidaws.model.User;
 
@@ -65,6 +68,7 @@ public class EventDAO extends GenericDAO<Event> {
 		Criterion criteriaFirstTeam = Restrictions.eq("firstTeam.id", Integer.parseInt(teamID));
 		Criterion criteriaSecondTeam = Restrictions.eq("secondTeam.id", Integer.parseInt(teamID));
 		criteria.add(Restrictions.or(criteriaFirstTeam, criteriaSecondTeam));
+		criteria.addOrder(Order.desc("date"));
 		return criteria.list();
 	}
 
@@ -79,7 +83,24 @@ public class EventDAO extends GenericDAO<Event> {
 		Criterion criteriaFirstTeam = Restrictions.in("firstTeam", userTeams);
 		Criterion criteriaSecondTeam = Restrictions.in("secondTeam", userTeams);
 		criteria.add(Restrictions.or(criteriaFirstTeam, criteriaSecondTeam));
+		criteria.addOrder(Order.desc("date"));
 		
 		return criteria.list();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Event> listEventsBySport(String userID) {
+		Criteria criteria = getSession().createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", Integer.parseInt(userID)));
+		User user = (User) criteria.uniqueResult();
+		List<Sport> userSports = user.getSports();
+		
+		criteria = getSession().createCriteria(Event.class);
+		criteria.add(Restrictions.in("sport", userSports));
+		criteria.add(Restrictions.ge("date", Calendar.getInstance()));
+		criteria.addOrder(Order.desc("date"));
+		
+		return criteria.list();
+	}
+	
 }

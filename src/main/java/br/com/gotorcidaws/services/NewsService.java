@@ -1,6 +1,8 @@
 package br.com.gotorcidaws.services;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.Response;
 
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.NewsDAO;
+import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.News;
 import br.com.gotorcidaws.model.Team;
 import br.com.gotorcidaws.utils.JSONConverter;
@@ -23,11 +26,12 @@ import br.com.gotorcidaws.utils.json.JSONObject;
 @Path("news")
 public class NewsService extends GoTorcidaService {
 
+	
 	@GET
-	@Path("{userId}/{type}/{targetId}")
+	@Path("find/{type}/{targetId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String listNews(@PathParam("userId") String userId, @PathParam("type") String type, @PathParam("targetId") String targetId) {
-		ServiceLogger.received(userId + " / " + type + " / " + targetId);
+	public String listNews(@PathParam("type") String type, @PathParam("targetId") String targetId) {
+		ServiceLogger.received(type + " / " + targetId);
 		
 		try {
 			NewsDAO newsDAO = DAOManager.getNewsDAO();
@@ -74,7 +78,7 @@ public class NewsService extends GoTorcidaService {
 		
 		try {
 			NewsDAO newsDAO = DAOManager.getNewsDAO();
-			News news = newsDAO.findByID(Integer.parseInt(newsId));
+			News news = updateNewsDate(newsDAO.findByID(Integer.parseInt(newsId)));
 			
 			message.setResponse(200,  "Ok.");
 			message.addData("news", new JSONObject(news));
@@ -87,25 +91,70 @@ public class NewsService extends GoTorcidaService {
 		return message.toJSON();
 	}
 	
-	private List<News> updateNewsDate(List<News> news) {
+	private News updateNewsDate(News news) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		
+		news.setFormatedRegistrationDate(dateFormat.format(news.getDate().getTime()));
+		return news;
+	}
+	
+	private List<News> updateNewsDate(List<News> news) {
 		for (int i = 0; i < news.size(); i++) {
-			News newss = news.get(i);
-			newss.setFormatedRegistrationDate(dateFormat.format(newss.getDate().getTime()));
+			News newz = news.get(i);
+			newz = updateNewsDate(newz);
 		}
 		
 		return news;
 	}
 	
 	@POST
+	@Path("update/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response save(String content) {
+	public Response update(String content) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
 		NewsDAO newsDAO = DAOManager.getNewsDAO();
 		ServiceLogger.received(content);
 
-		News news = JSONConverter.toInstanceOf(News.class, content);
+		JSONObject newsJSON = new JSONObject(content);
+		
+		News news = newsDAO.findByID(newsJSON.getInt("id"));
+		news.setDescription(newsJSON.getString("description"));
+		news.setTitle(newsJSON.getString("title"));
 
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(dateFormat.parse(newsJSON.getString("date")));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		news.setDate(calendar);
+		
+		try {
+			newsDAO.update(news);
+			message.setResponse(200, "Notícia criada com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("save/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response save(String content) {
+		NewsDAO newsDAO = DAOManager.getNewsDAO();
+		UserDAO userDAO = DAOManager.getUserDAO();
+		
+		ServiceLogger.received(content);
+
+		JSONObject newsJSON = new JSONObject(content);
+		News news = JSONConverter.toInstanceOf(News.class, content);
+		news.setUser(userDAO.findById(Integer.parseInt(newsJSON.getString("user"))));
+		
 		try {
 			newsDAO.save(news);
 			message.setResponse(200, "Notícia criada com sucesso!");
@@ -117,4 +166,5 @@ public class NewsService extends GoTorcidaService {
 		ServiceLogger.sent(message.toJSON());
 		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
+
 }

@@ -250,5 +250,8 @@ public class User implements Serializable {
 	public List<Team> getTeams() {
 		return teams;
 	}
-	
+
+	public List<Sport> getSports() {
+		return sports;
+	}
 }

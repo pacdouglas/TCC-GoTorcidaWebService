@@ -16,16 +16,16 @@ public class NewsDAO extends GenericDAO<News> {
 	}
 
 	public void save(News news) {
-		save(news);
+		super.save(news);
 	}
 
 	public void update(News news) {
-		update(news);
+		super.update(news);
 	}
 
 	public void delete(int id) {
 		News s = findById(id);
-		delete(s);
+		super.delete(s);
 	}
 
 	public News findByID(int id) {
