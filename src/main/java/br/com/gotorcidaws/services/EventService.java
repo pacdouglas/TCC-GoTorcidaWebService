@@ -33,12 +33,16 @@ public class EventService extends GoTorcidaService {
 
 		EventDAO eventDAO = DAOManager.getEventDAO();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
+		EventResultDAO eventResultDAO = DAOManager.getEventResultDAO();
 
 		try {
 			Event event = eventDAO.findById(Integer.parseInt(eventId));
+			EventResult eventResult = eventResultDAO.findByEventID(event);
 			event.setFormatedEventDate(dateFormat.format(event.getDate().getTime()));
 			message.setResponse(200, "Ok.");
 			message.addData("event", new JSONObject(event));
+			message.addData("eventResult", new JSONObject(eventResult));
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
 			ex.printStackTrace();
