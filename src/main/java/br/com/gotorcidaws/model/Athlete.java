@@ -60,6 +60,9 @@ public class Athlete implements Serializable {
 	@Column
 	private String instagram;
 	
+	@Column(length = 500)
+	private String urlImage;
+	
 	@ManyToMany
 	@JoinTable(name = "team_athletes", joinColumns = { @JoinColumn(name = "athlete_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "team_id") })
@@ -162,6 +165,14 @@ public class Athlete implements Serializable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+	
+	public String getUrlImage() {
+		return urlImage;
+	}
+
+	public void setUrlImage(String urlImage) {
+		this.urlImage = urlImage;
 	}
 
 	@Override
