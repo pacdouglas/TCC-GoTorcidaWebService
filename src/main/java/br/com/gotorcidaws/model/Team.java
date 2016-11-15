@@ -66,6 +66,18 @@ public class Team implements Serializable {
 	@Transient
 	private String formatedRegistrationDate;
 	
+	@Column
+	private String facebook;
+	
+	@Column
+	private String twitter;
+
+	@Column
+	private String instagram;
+
+	@Column
+	private String city;
+	
 	public int getId() {
 		return id;
 	}
@@ -144,6 +156,38 @@ public class Team implements Serializable {
 
 	public void setTeamType(String teamType) {
 		this.teamType = teamType;
+	}
+
+	public String getFacebook() {
+		return facebook;
+	}
+
+	public void setFacebook(String facebook) {
+		this.facebook = facebook;
+	}
+
+	public String getTwitter() {
+		return twitter;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
+	public String getInstagram() {
+		return instagram;
+	}
+
+	public void setInstagram(String instagram) {
+		this.instagram = instagram;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	@Override

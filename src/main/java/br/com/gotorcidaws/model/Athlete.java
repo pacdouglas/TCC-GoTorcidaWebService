@@ -36,6 +36,9 @@ public class Athlete implements Serializable {
 
 	@Column
 	private String position;
+
+	@Column
+	private String city;
 	
 	@JsonIgnore
 	@Temporal(TemporalType.DATE)
@@ -151,6 +154,14 @@ public class Athlete implements Serializable {
 
 	public void setInstagram(String instagram) {
 		this.instagram = instagram;
+	}
+	
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	@Override

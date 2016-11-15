@@ -103,13 +103,22 @@ public class TeamService extends GoTorcidaService {
 	}
 	
 	@POST
+	@Path("update/{teamID}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response update(String content) {
+	public Response update(@PathParam("teamID") String teamID, String content) {
 		TeamDAO teamDAO = DAOManager.getTeamDAO();
 		ServiceLogger.received(content);
 
-		Team team = JSONConverter.toInstanceOf(Team.class, content);
-
+		Team team = teamDAO.findByID(Integer.parseInt(teamID));
+		JSONObject teamJSON = new JSONObject(content);
+		
+		team.setName(teamJSON.getString("name"));
+		team.setCity(teamJSON.getString("city"));
+		team.setEmailAddress(teamJSON.getString("emailAddress"));
+		team.setFacebook(teamJSON.getString("facebook"));
+		team.setTwitter(teamJSON.getString("twitter"));
+		team.setInstagram(teamJSON.getString("instagram"));
+			
 		try {
 			teamDAO.update(team);
 			message.setResponse(200, "Dados alterados com sucesso!");

@@ -19,7 +19,7 @@ public class TeamDAO extends GenericDAO<Team> {
 	}
 
 	public void update(Team team) {
-		update(team);
+		super.update(team);
 	}
 
 	public void delete(int id) {
