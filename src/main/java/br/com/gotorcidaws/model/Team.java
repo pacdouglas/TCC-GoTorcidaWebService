@@ -1,6 +1,7 @@
 package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -43,10 +45,9 @@ public class Team implements Serializable {
 	@Column(length = 100, nullable = false)
 	private String website;
 
-	@ManyToMany
-	@JoinTable(name = "team_athletes", joinColumns = { @JoinColumn(name = "team_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "athlete_id") })
-	private List<Athlete> athletes;
+	@JsonIgnore
+	@OneToMany(mappedBy = "team")
+	private List<TeamAthlete> teamAthletes = new ArrayList<TeamAthlete>();
 
 	@Column(length = 1, nullable = false)
 	private String active;
@@ -77,6 +78,9 @@ public class Team implements Serializable {
 
 	@Column
 	private String city;
+	
+	@Transient
+	private List<Athlete> athletes = new ArrayList<Athlete>();
 	
 	public int getId() {
 		return id;
@@ -188,6 +192,22 @@ public class Team implements Serializable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public List<TeamAthlete> getTeamAthletes() {
+		return teamAthletes;
+	}
+
+	public void setTeamAthletes(List<TeamAthlete> teamAthletes) {
+		this.teamAthletes = teamAthletes;
+	}
+	
+	public List<Athlete> getAthletes() {
+		return athletes;
+	}
+
+	public void setAthletes(List<Athlete> athletes) {
+		this.athletes = athletes;
 	}
 
 	@Override

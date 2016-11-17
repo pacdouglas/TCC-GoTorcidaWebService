@@ -41,8 +41,8 @@ public class EventService extends GoTorcidaService {
 			EventResult eventResult = eventResultDAO.findByEventID(event);
 			event.setFormatedEventDate(dateFormat.format(event.getDate().getTime()));
 			message.setResponse(200, "Ok.");
-			message.addData("event", new JSONObject(event));
-			message.addData("eventResult", new JSONObject(eventResult));
+			message.addData("event", JSONConverter.toJSON(Event.class, event));
+			message.addData("eventResult", JSONConverter.toJSON(EventResult.class, eventResult));
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
 			ex.printStackTrace();
@@ -66,7 +66,7 @@ public class EventService extends GoTorcidaService {
 
 			JSONArray eventsArray = new JSONArray();
 			for (int i = 0; i < events.size(); i++) {
-				eventsArray.put(new JSONObject(JSONConverter.toJSON(events.get(i))));
+				eventsArray.put(new JSONObject(JSONConverter.toJSON(Event.class, events.get(i))));
 			}
 
 			message.setResponse(200, "Ok.");
@@ -94,7 +94,7 @@ public class EventService extends GoTorcidaService {
 
 			JSONArray eventsArray = new JSONArray();
 			for (int i = 0; i < events.size(); i++) {
-				eventsArray.put(new JSONObject(JSONConverter.toJSON(events.get(i))));
+				eventsArray.put(new JSONObject(JSONConverter.toJSON(Event.class, events.get(i))));
 			}
 
 			message.setResponse(200, "Ok.");
@@ -122,7 +122,7 @@ public class EventService extends GoTorcidaService {
 
 			JSONArray eventsArray = new JSONArray();
 			for (int i = 0; i < events.size(); i++) {
-				eventsArray.put(new JSONObject(JSONConverter.toJSON(events.get(i))));
+				eventsArray.put(new JSONObject(JSONConverter.toJSON(Event.class, events.get(i))));
 			}
 
 			message.setResponse(200, "Ok.");

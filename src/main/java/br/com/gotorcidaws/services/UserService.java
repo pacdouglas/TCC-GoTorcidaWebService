@@ -14,7 +14,6 @@ import br.com.gotorcidaws.model.User;
 import br.com.gotorcidaws.model.UserType;
 import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.ServiceLogger;
-import br.com.gotorcidaws.utils.json.JSONObject;
 
 @Path("user")
 public class UserService extends GoTorcidaService {
@@ -29,7 +28,7 @@ public class UserService extends GoTorcidaService {
 		try {
 			User user = userDAO.findById(Integer.parseInt(userId));
 			message.setResponse(200, "Ok");
-			message.addData("user", new JSONObject(user));
+			message.addData("user", JSONConverter.toJSON(User.class, user));
 		} catch (Exception ex) {
 			message.setResponse(500, "Ocorreu algum erro interno no servidor.");
 			ex.printStackTrace();
@@ -51,7 +50,7 @@ public class UserService extends GoTorcidaService {
 			
 			if (user != null) {
 				message.setResponse(200, "Ok");
-				message.addData("user", new JSONObject(user));
+				message.addData("user", JSONConverter.toJSON(User.class, user));
 			} else {
 				message.setResponse(404, "Usuário não encontrado");
 			}

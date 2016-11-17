@@ -32,17 +32,14 @@ public class News implements Serializable {
 	@Column(nullable = false, length = 3500)
 	private String description;
 
-	@JsonDeserialize(using=DefaultDateDeserializer.class)
+	@JsonDeserialize(using = DefaultDateDeserializer.class)
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
 	private Calendar date;
 
 	@Column
 	private Integer teamId;
-	
-	@Column
-	private Integer eventId;
-	
+
 	@JsonIgnore
 	@ManyToOne
 	private User user;
@@ -50,6 +47,9 @@ public class News implements Serializable {
 	@Transient
 	private String formatedRegistrationDate;
 
+	@Transient
+	private String fullName;
+	
 	public int getId() {
 		return id;
 	}
@@ -88,6 +88,7 @@ public class News implements Serializable {
 
 	public void setUser(User user) {
 		this.user = user;
+		this.setFullName(user.getFullName());
 	}
 
 	public String getFormatedRegistrationDate() {
@@ -98,20 +99,20 @@ public class News implements Serializable {
 		this.formatedRegistrationDate = formatedRegistrationDate;
 	}
 
-	public int getTeamId() {
+	public Integer getTeamId() {
 		return teamId;
 	}
 
-	public void setTeamId(int teamId) {
+	public void setTeamId(Integer teamId) {
 		this.teamId = teamId;
 	}
 
-	public int getEventId() {
-		return eventId;
+	public String getFullName() {
+		return fullName;
 	}
 
-	public void setEventId(int eventId) {
-		this.eventId = eventId;
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	@Override
@@ -120,12 +121,10 @@ public class News implements Serializable {
 		int result = 1;
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + eventId;
 		result = prime * result + ((formatedRegistrationDate == null) ? 0 : formatedRegistrationDate.hashCode());
 		result = prime * result + id;
 		result = prime * result + teamId;
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -148,8 +147,6 @@ public class News implements Serializable {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (eventId != other.eventId)
-			return false;
 		if (formatedRegistrationDate == null) {
 			if (other.formatedRegistrationDate != null)
 				return false;
@@ -164,19 +161,6 @@ public class News implements Serializable {
 				return false;
 		} else if (!title.equals(other.title))
 			return false;
-		if (user == null) {
-			if (other.user != null)
-				return false;
-		} else if (!user.equals(other.user))
-			return false;
 		return true;
 	}
-
-	@Override
-	public String toString() {
-		return "News [id=" + id + ", title=" + title + ", description=" + description + ", date=" + date + ", teamId="
-				+ teamId + ", eventId=" + eventId + ", user=" + user + ", formatedRegistrationDate="
-				+ formatedRegistrationDate + "]";
-	}
-	
 }

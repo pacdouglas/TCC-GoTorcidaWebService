@@ -3,10 +3,14 @@ package br.com.gotorcidaws.dao;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 
 import br.com.gotorcidaws.model.Athlete;
 import br.com.gotorcidaws.model.Team;
+import br.com.gotorcidaws.model.TeamAthlete;
 
 public class AthleteDAO extends GenericDAO<Athlete> {
 
@@ -34,9 +38,21 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 	@SuppressWarnings("unchecked")
 	public List<Athlete> findByTeam(Team team) {
 		Criteria criteria = getSession().createCriteria(Athlete.class);
-		criteria.createAlias("teams", "teamsAlias");
-		criteria.add(Restrictions.eq("teamsAlias.id", team.getId()));
+		criteria.createAlias("teamAthletes", "teamsAlias");
+		criteria.add(Restrictions.eq("teamsAlias.team.id", team.getId()));
 		return criteria.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Athlete> findAvailableForTeam(Team team) {
+		Criteria criteria = getSession().createCriteria(Athlete.class);
+		criteria.add(Restrictions.eq("sport.id", team.getSport().getId()));
+		
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(TeamAthlete.class);
+		detachedCriteria.add(Restrictions.eq("team.id", team.getId()));
+		
+		criteria.add(Subqueries.propertyNotIn("id", detachedCriteria.setProjection(Property.forName("athlete.id"))));
+
+		return criteria.list();
+	}
 }

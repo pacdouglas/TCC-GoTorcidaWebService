@@ -46,7 +46,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
+			<artifactId>jackson-jaxrs</artifactId>
 			<version>1.9.13</version>
 		</dependency>
 		<dependency>

@@ -11,10 +11,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import br.com.gotorcidaws.dao.AthleteDAO;
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.SportDAO;
 import br.com.gotorcidaws.dao.TeamDAO;
 import br.com.gotorcidaws.dao.UserDAO;
+import br.com.gotorcidaws.model.Athlete;
 import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
 import br.com.gotorcidaws.model.User;
@@ -44,7 +46,7 @@ public class TeamService extends GoTorcidaService {
 				for (int i = 0; i < teams.size(); i++) {
 					Team team = teams.get(i);
 					team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime())); 
-					teamsArray.put(new JSONObject(team));
+					teamsArray.put(JSONConverter.toJSON(Team.class, team));
 				}
 			} else {
 				SportDAO sportDAO = DAOManager.getSportDAO();
@@ -61,7 +63,7 @@ public class TeamService extends GoTorcidaService {
 							for (int j = 0; j < teamsList.size(); j++) {
 								Team team = teamsList.get(j);
 								team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime())); 
-								teamsFromSport.put(new JSONObject(team));
+								teamsFromSport.put(JSONConverter.toJSON(Team.class, team));
 							}
 							
 							teamsArray.put(teamsFromSport);
@@ -92,7 +94,7 @@ public class TeamService extends GoTorcidaService {
 			Team team = teamDAO.findById(Integer.parseInt(teamID));
 			team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime()));
 			message.setResponse(200, "Ok.");
-			message.addData("team", JSONConverter.toJSON(team));
+			message.addData("team", JSONConverter.toJSON(Team.class, team));
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
 			ex.printStackTrace();
@@ -129,5 +131,37 @@ public class TeamService extends GoTorcidaService {
 
 		ServiceLogger.sent(message.toJSON());
 		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("findAvailable/{teamId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String findAvailableAthletes(@PathParam("teamId") String teamId) throws Exception {
+		ServiceLogger.received(teamId);
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		AthleteDAO athleteDAO = DAOManager.getAthleteDAO();
+		TeamDAO teamDAO = DAOManager.getTeamDAO();
+		Team team = teamDAO.findById(Integer.parseInt(teamId));
+		
+		JSONArray athletesArray = new JSONArray();
+		try {
+			List<Athlete> athletesList = athleteDAO.findAvailableForTeam(team);
+			
+			for (int j = 0; j < athletesList.size(); j++) {
+				Athlete athlete = athletesList.get(j);
+				athlete.setFormatedRegistrationDate(dateFormat.format(athlete.getRegistrationDate().getTime()));
+				athletesArray.put(JSONConverter.toJSON(Athlete.class, athlete));
+			}
+			
+			message.setResponse(200, "Ok.");
+			message.addData("athletes", athletesArray);
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação");
+			ex.printStackTrace();
+		}
+		
+		ServiceLogger.sent(message.toJSON());
+		return message.toJSON();
 	}
 }

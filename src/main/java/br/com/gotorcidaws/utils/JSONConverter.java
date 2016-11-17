@@ -8,14 +8,14 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 public class JSONConverter {
 
-	public static String toJSON(Object object) {
+	public static String toJSON(Class<?> type, Object object) {
 
 		ObjectMapper mapper = new ObjectMapper();
-
+		
 		String JSONString = null;
 
 		try {
-			JSONString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+			JSONString = mapper.writerWithType(type).writeValueAsString(object);
 		} catch (JsonGenerationException e) {
 			e.printStackTrace();
 		} catch (JsonMappingException e) {
@@ -31,6 +31,7 @@ public class JSONConverter {
 	public static <T> T toInstanceOf(Class<?> type, String json) {
 		try {
 			ObjectMapper mapper = new ObjectMapper();
+
 			try {
 				return (T) type.cast(mapper.readValue(json, type));
 			} catch (IOException e) {

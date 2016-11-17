@@ -15,15 +15,14 @@ import br.com.gotorcidaws.utils.json.JSONObject;
 public class ServiceExecuteTest {
 
 	public static void main(String[] args) {
-		//login();
-		//listSports();
+		login();
+		listSports();
 		listTeams();
-		//dashboardConfiguration();
-		//findLeague();
-		//findTeam(); 
-		//listAthletesFromTeam();
-		//findAthlete();
-		//listEvents();
+		dashboardConfiguration();
+		findTeam(); 
+		listAthletesFromTeam();
+		findAthlete();
+		listEvents();
 	}
 
 	public static void login() {

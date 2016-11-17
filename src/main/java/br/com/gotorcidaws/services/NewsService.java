@@ -56,7 +56,8 @@ public class NewsService extends GoTorcidaService {
 			
 			JSONArray newsArray = new JSONArray();
 			for (int i = 0; i < newsList.size(); i++) {
-				newsArray.put(new JSONObject(newsList.get(i)));
+				newsList.get(i).setFullName(newsList.get(i).getUser().getFullName());
+				newsArray.put(JSONConverter.toJSON(News.class, newsList.get(i)));
 			}
 		
 			message.setResponse(200, "Ok.");
@@ -79,9 +80,9 @@ public class NewsService extends GoTorcidaService {
 		try {
 			NewsDAO newsDAO = DAOManager.getNewsDAO();
 			News news = updateNewsDate(newsDAO.findByID(Integer.parseInt(newsId)));
-			
+			news.setFullName(news.getUser().getFullName());
 			message.setResponse(200,  "Ok.");
-			message.addData("news", new JSONObject(news));
+			message.addData("news", JSONConverter.toJSON(News.class, news));
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação");
 			ex.printStackTrace();

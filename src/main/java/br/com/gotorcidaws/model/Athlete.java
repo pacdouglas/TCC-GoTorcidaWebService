@@ -1,17 +1,15 @@
 package br.com.gotorcidaws.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
@@ -33,9 +31,6 @@ public class Athlete implements Serializable {
 
 	@ManyToOne
 	private Sport sport;
-
-	@Column
-	private String position;
 
 	@Column
 	private String city;
@@ -63,14 +58,19 @@ public class Athlete implements Serializable {
 	@Column(length = 500)
 	private String urlImage;
 	
-	@ManyToMany
-	@JoinTable(name = "team_athletes", joinColumns = { @JoinColumn(name = "athlete_id") }, inverseJoinColumns = {
-			@JoinColumn(name = "team_id") })
-	List<Team> teams;
+	@JsonIgnore
+	@OneToMany(mappedBy = "athlete")
+	private List<TeamAthlete> teamAthletes = new ArrayList<TeamAthlete>();
 
 	@Transient
 	private String formatedRegistrationDate;
 
+	@Transient
+	private String number;
+	
+	@Transient
+	private String position;
+	
 	public int getId() {
 		return id;
 	}
@@ -127,14 +127,6 @@ public class Athlete implements Serializable {
 		this.formatedRegistrationDate = formatedRegistrationDate;
 	}
 
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
-	}
-
 	public String getFacebook() {
 		return facebook;
 	}
@@ -175,6 +167,30 @@ public class Athlete implements Serializable {
 		this.urlImage = urlImage;
 	}
 
+	public List<TeamAthlete> getTeamAthletes() {
+		return teamAthletes;
+	}
+
+	public void setTeamAthletes(List<TeamAthlete> teamAthletes) {
+		this.teamAthletes = teamAthletes;
+	}
+	
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -185,7 +201,6 @@ public class Athlete implements Serializable {
 		result = prime * result + id;
 		result = prime * result + ((instagram == null) ? 0 : instagram.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((position == null) ? 0 : position.hashCode());
 		result = prime * result + ((registrationDate == null) ? 0 : registrationDate.hashCode());
 		result = prime * result + ((sport == null) ? 0 : sport.hashCode());
 		result = prime * result + ((twitter == null) ? 0 : twitter.hashCode());
@@ -229,11 +244,6 @@ public class Athlete implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (position == null) {
-			if (other.position != null)
-				return false;
-		} else if (!position.equals(other.position))
-			return false;
 		if (registrationDate == null) {
 			if (other.registrationDate != null)
 				return false;
@@ -259,8 +269,7 @@ public class Athlete implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Athlete [id=" + id + ", name=" + name + ", sport=" + sport + ", position=" + position
-				+ ", registrationDate=" + registrationDate + ", emailAddress=" + emailAddress + ", website=" + website
+		return "Athlete [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + registrationDate + ", emailAddress=" + emailAddress + ", website=" + website
 				+ ", facebook=" + facebook + ", twitter=" + twitter + ", instagram=" + instagram
 				+ ", formatedRegistrationDate=" + formatedRegistrationDate + "]";
 	}
