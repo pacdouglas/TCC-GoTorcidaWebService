@@ -29,4 +29,8 @@ public class DAOManager {
 	public static EventResultDAO getEventResultDAO() {
 		return new EventResultDAO();
 	}
+
+	public static PositionDAO getPositionDAO() {
+		return new PositionDAO();
+	}
 }
