@@ -14,11 +14,13 @@ import javax.ws.rs.core.Response;
 import br.com.gotorcidaws.dao.AthleteDAO;
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.SportDAO;
+import br.com.gotorcidaws.dao.TeamAthleteDAO;
 import br.com.gotorcidaws.dao.TeamDAO;
 import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.Athlete;
 import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
+import br.com.gotorcidaws.model.TeamAthlete;
 import br.com.gotorcidaws.model.User;
 import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.ServiceLogger;
@@ -45,7 +47,7 @@ public class TeamService extends GoTorcidaService {
 				
 				for (int i = 0; i < teams.size(); i++) {
 					Team team = teams.get(i);
-					team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime())); 
+					team.setFormatedRegistrationDate(dateFormat.format(team.getSinceWhen().getTime())); 
 					teamsArray.put(JSONConverter.toJSON(Team.class, team));
 				}
 			} else {
@@ -62,7 +64,7 @@ public class TeamService extends GoTorcidaService {
 							
 							for (int j = 0; j < teamsList.size(); j++) {
 								Team team = teamsList.get(j);
-								team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime())); 
+								team.setFormatedRegistrationDate(dateFormat.format(team.getSinceWhen().getTime())); 
 								teamsFromSport.put(JSONConverter.toJSON(Team.class, team));
 							}
 							
@@ -92,7 +94,7 @@ public class TeamService extends GoTorcidaService {
 		
 		try {
 			Team team = teamDAO.findById(Integer.parseInt(teamID));
-			team.setFormatedRegistrationDate(dateFormat.format(team.getRegistrationDate().getTime()));
+			team.setFormatedRegistrationDate(dateFormat.format(team.getSinceWhen().getTime()));
 			message.setResponse(200, "Ok.");
 			message.addData("team", JSONConverter.toJSON(Team.class, team));
 		} catch (Exception ex) {
@@ -102,6 +104,40 @@ public class TeamService extends GoTorcidaService {
 
 		ServiceLogger.sent(message.toJSON());
 		return message.toJSON();
+	}
+	
+	
+	@POST
+	@Path("saveAthleteOnTeam/{teamID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response saveAthleteOnTeam(@PathParam("teamID") String teamID, String content) {
+		
+		TeamDAO teamDAO = DAOManager.getTeamDAO();
+		AthleteDAO athleteDAO = DAOManager.getAthleteDAO();
+		TeamAthleteDAO teamAthleteDAO = DAOManager.getTeamAthleteDAO();
+		ServiceLogger.received(content);
+		
+		JSONObject postParameters = new JSONObject(content);
+		
+		Team team = teamDAO.findById(Integer.parseInt(teamID));
+		Athlete athlete = athleteDAO.findById(Integer.parseInt(postParameters.getString("athlete")));
+		
+		TeamAthlete teamAthlete = new TeamAthlete();
+		teamAthlete.setAthlete(athlete);
+		teamAthlete.setTeam(team);
+		teamAthlete.setNumber(postParameters.getString("number"));
+		teamAthlete.setPosition(postParameters.getString("position"));
+		
+		try {
+			teamAthleteDAO.save(teamAthlete);
+			message.setResponse(200, "Atleta adicionado com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+		
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
 	
 	@POST
@@ -150,7 +186,7 @@ public class TeamService extends GoTorcidaService {
 			
 			for (int j = 0; j < athletesList.size(); j++) {
 				Athlete athlete = athletesList.get(j);
-				athlete.setFormatedRegistrationDate(dateFormat.format(athlete.getRegistrationDate().getTime()));
+				athlete.setFormatedRegistrationDate(dateFormat.format(athlete.getBirthDate().getTime()));
 				athletesArray.put(JSONConverter.toJSON(Athlete.class, athlete));
 			}
 			

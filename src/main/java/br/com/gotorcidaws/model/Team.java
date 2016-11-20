@@ -37,7 +37,7 @@ public class Team implements Serializable {
 	@JsonIgnore
 	@Temporal(TemporalType.DATE)
 	@Column(nullable = false)
-	private Calendar registrationDate;
+	private Calendar sinceWhen;
 
 	@Column(length = 100, nullable = false)
 	private String emailAddress;
@@ -106,14 +106,6 @@ public class Team implements Serializable {
 		this.sport = sport;
 	}
 
-	public Calendar getRegistrationDate() {
-		return registrationDate;
-	}
-
-	public void setRegistrationDate(Calendar registrationDate) {
-		this.registrationDate = registrationDate;
-	}
-
 	public String getEmailAddress() {
 		return emailAddress;
 	}
@@ -144,14 +136,6 @@ public class Team implements Serializable {
 
 	public void setUrlImage(String urlImage) {
 		this.urlImage = urlImage;
-	}
-
-	public String getFormatedRegistrationDate() {
-		return formatedRegistrationDate;
-	}
-
-	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
-		this.formatedRegistrationDate = formatedRegistrationDate;
 	}
 
 	public String getTeamType() {
@@ -210,6 +194,22 @@ public class Team implements Serializable {
 		this.athletes = athletes;
 	}
 
+	public Calendar getSinceWhen() {
+		return sinceWhen;
+	}
+
+	public void setSinceWhen(Calendar sinceWhen) {
+		this.sinceWhen = sinceWhen;
+	}
+
+	public String getFormatedRegistrationDate() {
+		return formatedRegistrationDate;
+	}
+
+	public void setFormatedRegistrationDate(String formatedRegistrationDate) {
+		this.formatedRegistrationDate = formatedRegistrationDate;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -218,7 +218,6 @@ public class Team implements Serializable {
 		result = prime * result + ((emailAddress == null) ? 0 : emailAddress.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((registrationDate == null) ? 0 : registrationDate.hashCode());
 		result = prime * result + ((sport == null) ? 0 : sport.hashCode());
 		result = prime * result + ((website == null) ? 0 : website.hashCode());
 		return result;
@@ -249,11 +248,6 @@ public class Team implements Serializable {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
-			return false;
-		if (registrationDate == null) {
-			if (other.registrationDate != null)
-				return false;
-		} else if (!registrationDate.equals(other.registrationDate))
 			return false;
 		if (sport == null) {
 			if (other.sport != null)

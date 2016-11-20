@@ -33,4 +33,8 @@ public class DAOManager {
 	public static PositionDAO getPositionDAO() {
 		return new PositionDAO();
 	}
+	
+	public static TeamAthleteDAO getTeamAthleteDAO() {
+		return new TeamAthleteDAO();
+	}
 }

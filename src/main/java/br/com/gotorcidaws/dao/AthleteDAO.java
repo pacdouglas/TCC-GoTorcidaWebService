@@ -19,11 +19,11 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 	}
 
 	public void save(Athlete Athlete) {
-		save(Athlete);
+		super.save(Athlete);
 	}
 
 	public void update(Athlete Athlete) {
-		update(Athlete);
+		super.update(Athlete);
 	}
 
 	public void delete(int id) {

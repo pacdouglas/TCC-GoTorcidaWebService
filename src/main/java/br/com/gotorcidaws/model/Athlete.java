@@ -15,6 +15,9 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+import br.com.gotorcidaws.utils.DefaultDateDeserializer;
 
 @Entity
 public class Athlete implements Serializable {
@@ -35,10 +38,10 @@ public class Athlete implements Serializable {
 	@Column
 	private String city;
 	
-	@JsonIgnore
+	@JsonDeserialize(using = DefaultDateDeserializer.class)
 	@Temporal(TemporalType.DATE)
-	@Column
-	private Calendar registrationDate;
+	@Column(nullable = false)
+	private Calendar birthDate;
 
 	@Column
 	private String emailAddress;
@@ -71,6 +74,9 @@ public class Athlete implements Serializable {
 	@Transient
 	private String position;
 	
+	@Transient
+	private Integer age;
+	
 	public int getId() {
 		return id;
 	}
@@ -95,12 +101,12 @@ public class Athlete implements Serializable {
 		this.sport = sport;
 	}
 
-	public Calendar getRegistrationDate() {
-		return registrationDate;
+	public Calendar getBirthDate() {
+		return birthDate;
 	}
 
-	public void setRegistrationDate(Calendar registrationDate) {
-		this.registrationDate = registrationDate;
+	public void setBirthDate(Calendar birthDate) {
+		this.birthDate = birthDate;
 	}
 
 	public String getEmailAddress() {
@@ -191,6 +197,14 @@ public class Athlete implements Serializable {
 		this.position = position;
 	}
 
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -201,7 +215,7 @@ public class Athlete implements Serializable {
 		result = prime * result + id;
 		result = prime * result + ((instagram == null) ? 0 : instagram.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((registrationDate == null) ? 0 : registrationDate.hashCode());
+		result = prime * result + ((birthDate == null) ? 0 : birthDate.hashCode());
 		result = prime * result + ((sport == null) ? 0 : sport.hashCode());
 		result = prime * result + ((twitter == null) ? 0 : twitter.hashCode());
 		result = prime * result + ((website == null) ? 0 : website.hashCode());
@@ -244,10 +258,10 @@ public class Athlete implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (registrationDate == null) {
-			if (other.registrationDate != null)
+		if (birthDate == null) {
+			if (other.birthDate != null)
 				return false;
-		} else if (!registrationDate.equals(other.registrationDate))
+		} else if (!birthDate.equals(other.birthDate))
 			return false;
 		if (sport == null) {
 			if (other.sport != null)
@@ -269,7 +283,7 @@ public class Athlete implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Athlete [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + registrationDate + ", emailAddress=" + emailAddress + ", website=" + website
+		return "Athlete [id=" + id + ", name=" + name + ", sport=" + sport + ", registrationDate=" + birthDate + ", emailAddress=" + emailAddress + ", website=" + website
 				+ ", facebook=" + facebook + ", twitter=" + twitter + ", instagram=" + instagram
 				+ ", formatedRegistrationDate=" + formatedRegistrationDate + "]";
 	}
