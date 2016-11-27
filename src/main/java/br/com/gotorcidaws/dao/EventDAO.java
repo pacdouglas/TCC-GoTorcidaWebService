@@ -21,16 +21,16 @@ public class EventDAO extends GenericDAO<Event> {
 	}
 
 	public void save(Event event) {
-		save(event);
+		super.save(event);
 	}
 
 	public void update(Event event) {
-		update(event);
+		super.update(event);
 	}
 
 	public void delete(int id) {
 		Event s = findById(id);
-		delete(s);
+		super.delete(s);
 	}
 
 	public Event findByID(int id) {

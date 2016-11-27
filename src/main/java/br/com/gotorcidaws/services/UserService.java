@@ -14,6 +14,7 @@ import br.com.gotorcidaws.model.User;
 import br.com.gotorcidaws.model.UserType;
 import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.ServiceLogger;
+import br.com.gotorcidaws.utils.json.JSONObject;
 
 @Path("user")
 public class UserService extends GoTorcidaService {
@@ -89,6 +90,37 @@ public class UserService extends GoTorcidaService {
 
 		ServiceLogger.sent(message.toJSON());
 
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("update/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("userId") String userId, String content) {
+		UserDAO userDAO = DAOManager.getUserDAO();
+		ServiceLogger.received(content);
+
+		JSONObject userData = new JSONObject(content);
+		User user = userDAO.findById(Integer.parseInt(userId));
+		
+		if (user.getPassword().equals(userData.getString("oldPassword"))) {
+			user.setNickname(userData.getString("nickname"));
+			user.setPassword(userData.getString("password"));
+			user.setCelNumber(userData.getString("celNumber"));
+			
+			try {
+				userDAO.save(user);
+				message.setResponse(200, "Você se cadastrou com sucesso!");
+				message.addData("usuario", user.toString());
+			} catch (Exception ex) {
+				message.setResponse(401, "Ocorreu algum erro.");
+				ex.printStackTrace();
+			}
+		} else {
+			message.setResponse(200, "A senha atual informada está incorreta!");
+		}
+		
+		ServiceLogger.sent(message.toJSON());
 		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
 }

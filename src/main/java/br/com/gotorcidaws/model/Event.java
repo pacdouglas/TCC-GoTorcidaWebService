@@ -13,6 +13,9 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+import br.com.gotorcidaws.utils.DefaultDateDeserializer;
 
 @Entity
 public class Event implements Serializable {
@@ -38,11 +41,15 @@ public class Event implements Serializable {
 	@Column
 	private Double longitude;
 
+	@JsonDeserialize(using = DefaultDateDeserializer.class)
 	@JsonIgnore
 	@Column
 	@Temporal(TemporalType.DATE)
 	private Calendar date;
 
+	@Column
+	private String time;
+	
 	@Column
 	private String costs;
 
@@ -180,6 +187,14 @@ public class Event implements Serializable {
 
 	public void setSport(Sport sport) {
 		this.sport = sport;
+	}
+	
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
 	}
 
 	@Override

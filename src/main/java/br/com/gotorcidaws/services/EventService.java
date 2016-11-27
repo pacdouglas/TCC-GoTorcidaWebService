@@ -182,16 +182,68 @@ public class EventService extends GoTorcidaService {
 	}
 
 	@POST
+	@Path("save")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(String content) {
 		EventDAO eventDAO = DAOManager.getEventDAO();
 		ServiceLogger.received(content);
 
 		Event event = JSONConverter.toInstanceOf(Event.class, content);
-
 		try {
 			eventDAO.save(event);
 			message.setResponse(200, "Evento criado com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("update/{eventId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response update(@PathParam("eventId") String eventId, String content) {
+		EventDAO eventDAO = DAOManager.getEventDAO();
+		ServiceLogger.received(content);
+
+		Event temporaryEvent = JSONConverter.toInstanceOf(Event.class, content);
+		Event event = eventDAO.findByID(Integer.parseInt(eventId));
+		event.setCosts(temporaryEvent.getCosts());
+		event.setDate(temporaryEvent.getDate());
+		event.setDescription(temporaryEvent.getDescription());
+		event.setFirstTeam(temporaryEvent.getFirstTeam());
+		event.setLatitude(temporaryEvent.getLatitude());
+		event.setLocation(temporaryEvent.getLocation());
+		event.setLongitude(temporaryEvent.getLongitude());
+		event.setName(temporaryEvent.getName());
+		event.setSecondTeam(temporaryEvent.getSecondTeam());
+		event.setSport(temporaryEvent.getSport());
+		event.setTime(temporaryEvent.getTime());
+		
+		try {
+			eventDAO.save(event);
+			message.setResponse(200, "Evento alterado com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("delete/{eventId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response delete(@PathParam("eventId") String eventId, String content) {
+		EventDAO eventDAO = DAOManager.getEventDAO();
+		ServiceLogger.received(content);
+
+		try {
+			eventDAO.delete(Integer.parseInt(eventId));
+			message.setResponse(200, "Evento excluído com sucesso!");
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação.");
 			ex.printStackTrace();
