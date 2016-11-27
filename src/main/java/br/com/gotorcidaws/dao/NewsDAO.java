@@ -41,21 +41,29 @@ public class NewsDAO extends GenericDAO<News> {
 		Criteria crit = getSession().createCriteria(News.class).add(Restrictions.between("date", currentDate, minimumDate)).setMaxResults(10);
 		crit.addOrder(Order.desc("date"));
 		
-		return (List<News>) crit.list();
+		List<News> news = crit.list();
+		getSession().disconnect();
+		return news;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<News> findNewsByTeam(int teamId) {
 		Criteria crit = getSession().createCriteria(News.class).add(Restrictions.eq("teamId", teamId)).setMaxResults(10);
 		crit.addOrder(Order.desc("date"));
-		return crit.list();
+		
+		List<News> news = crit.list();
+		getSession().disconnect();
+		return news;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<News> findNewsByEvent(int id) {
 		Criteria crit = getSession().createCriteria(News.class).add(Restrictions.eq("event.id", id).ignoreCase()).setMaxResults(10);
 		crit.addOrder(Order.desc("date"));
-		return crit.list();
+		
+		List<News> news = crit.list();
+		getSession().disconnect();
+		return news;
 	}
 	
 }

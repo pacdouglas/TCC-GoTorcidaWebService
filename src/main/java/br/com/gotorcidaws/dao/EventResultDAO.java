@@ -11,16 +11,16 @@ public class EventResultDAO extends GenericDAO<EventResult> {
 	}
 
 	public void save(EventResult eventResult) {
-		save(eventResult);
+		super.save(eventResult);
 	}
 
 	public void update(EventResult eventResult) {
-		update(eventResult);
+		super.update(eventResult);
 	}
 
 	public void delete(int id) {
 		EventResult s = findById(id);
-		delete(s);
+		super.delete(s);
 	}
 
 	public EventResult findByID(int id) {
@@ -28,7 +28,9 @@ public class EventResultDAO extends GenericDAO<EventResult> {
 	}
 	
 	public EventResult findByEventID(Event event) {
-		return (EventResult) getSession().createCriteria(EventResult.class).add(Restrictions.eq("event.id", event.getId())).uniqueResult();	
+		EventResult eventResult = (EventResult) getSession().createCriteria(EventResult.class).add(Restrictions.eq("event.id", event.getId())).uniqueResult();
+		getSession().disconnect();
+		return eventResult;
 	}
 	
 }

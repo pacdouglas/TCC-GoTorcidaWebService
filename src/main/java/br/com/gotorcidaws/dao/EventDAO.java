@@ -50,6 +50,7 @@ public class EventDAO extends GenericDAO<Event> {
 			}
 		}
 
+		getSession().disconnect();
 		return nearbyEvents;
 	}
 
@@ -69,7 +70,10 @@ public class EventDAO extends GenericDAO<Event> {
 		Criterion criteriaSecondTeam = Restrictions.eq("secondTeam.id", Integer.parseInt(teamID));
 		criteria.add(Restrictions.or(criteriaFirstTeam, criteriaSecondTeam));
 		criteria.addOrder(Order.desc("date"));
-		return criteria.list();
+		
+		List<Event> events = criteria.list();
+		getSession().disconnect();
+		return events;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -85,7 +89,9 @@ public class EventDAO extends GenericDAO<Event> {
 		criteria.add(Restrictions.or(criteriaFirstTeam, criteriaSecondTeam));
 		criteria.addOrder(Order.desc("date"));
 		
-		return criteria.list();
+		List<Event> events = criteria.list();
+		getSession().disconnect();
+		return events;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -100,7 +106,9 @@ public class EventDAO extends GenericDAO<Event> {
 		criteria.add(Restrictions.ge("date", Calendar.getInstance()));
 		criteria.addOrder(Order.desc("date"));
 		
-		return criteria.list();
+		List<Event> events = criteria.list();
+		getSession().disconnect();
+		return events;
 	}
 	
 }

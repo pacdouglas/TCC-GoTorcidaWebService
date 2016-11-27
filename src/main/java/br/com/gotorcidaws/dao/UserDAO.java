@@ -23,8 +23,9 @@ public class UserDAO extends GenericDAO<User> {
 	}
 
 	public User findByEmail(String email) {
-		return (User) getSession().createCriteria(User.class).add(Restrictions.eq("emailAddress", email).ignoreCase())
-				.uniqueResult();
+		User user = (User) getSession().createCriteria(User.class).add(Restrictions.eq("emailAddress", email).ignoreCase()).uniqueResult();
+		getSession().disconnect();
+		return user; 
 	}
 
 }

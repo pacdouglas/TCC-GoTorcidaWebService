@@ -3,6 +3,7 @@ package br.com.gotorcidaws.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -31,6 +32,7 @@ public class GenericDAO<T extends Serializable> {
 			getSession().getTransaction().rollback();
 			t.printStackTrace();
 		} finally {
+			getSession().disconnect();
 			close();
 		}
 	}
@@ -44,6 +46,7 @@ public class GenericDAO<T extends Serializable> {
 			getSession().getTransaction().rollback();
 			t.printStackTrace();
 		} finally {
+			getSession().disconnect();
 			close();
 		}
 	}
@@ -57,23 +60,30 @@ public class GenericDAO<T extends Serializable> {
 			getSession().getTransaction().rollback();
 			t.printStackTrace();
 		} finally {
+			getSession().disconnect();
 			close();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<T> findAll() throws Exception {
-		return getSession().createCriteria(persistentClass).list();
+		List<T> objects = getSession().createCriteria(persistentClass).list();
+		getSession().disconnect();
+		return objects;
 	}
 
 	@SuppressWarnings("unchecked")
 	public T findById(int id) {
-		return (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("id", id)).uniqueResult();
+		T object = (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("id", id)).uniqueResult();
+		getSession().disconnect();
+		return object;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public T findByName(String name) {
-		return (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("name", name)).uniqueResult();
+		T object = (T) getSession().createCriteria(persistentClass).add(Restrictions.eq("name", name)).uniqueResult();
+		getSession().disconnect();
+		return object;
 	}
 
 	private void close() {

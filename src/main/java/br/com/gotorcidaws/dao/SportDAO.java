@@ -9,16 +9,16 @@ public class SportDAO extends GenericDAO<Sport> {
 	}
 
 	public void save(Sport sport) {
-		save(sport);
+		super.save(sport);
 	}
 
 	public void update(Sport sport) {
-		update(sport);
+		super.update(sport);
 	}
 
 	public void delete(int id) {
 		Sport s = findById(id);
-		delete(s);
+		super.delete(s);
 	}
 
 	public Sport findByID(int id) {

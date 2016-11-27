@@ -9,7 +9,9 @@ public class PositionDAO extends GenericDAO<Position>{
 
 	@SuppressWarnings("unchecked")
 	public List<Position> listBySport(Sport sport) {
-		return getSession().createCriteria(Position.class).add(Restrictions.eq("sport.id", sport.getId())).list();
+		List<Position> positions = getSession().createCriteria(Position.class).add(Restrictions.eq("sport.id", sport.getId())).list();
+		getSession().disconnect();
+		return positions;
 	}
 	
 }

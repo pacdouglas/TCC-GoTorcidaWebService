@@ -28,7 +28,7 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 
 	public void delete(int id) {
 		Athlete a = findById(id);
-		delete(a);
+		super.delete(a);
 	}
 
 	public Athlete findByID(int id) {
@@ -40,7 +40,9 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 		Criteria criteria = getSession().createCriteria(Athlete.class);
 		criteria.createAlias("teamAthletes", "teamsAlias");
 		criteria.add(Restrictions.eq("teamsAlias.team.id", team.getId()));
-		return criteria.list();
+		List<Athlete> athletes = criteria.list();
+		getSession().disconnect();
+		return athletes;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -53,6 +55,8 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 		
 		criteria.add(Subqueries.propertyNotIn("id", detachedCriteria.setProjection(Property.forName("athlete.id"))));
 
-		return criteria.list();
+		List<Athlete> athletes = criteria.list();
+		getSession().disconnect();
+		return athletes;
 	}
 }
