@@ -105,7 +105,7 @@ public class UserService extends GoTorcidaService {
 		
 		if (user.getPassword().equals(userData.getString("oldPassword"))) {
 			user.setNickname(userData.getString("nickname"));
-			user.setPassword(userData.getString("password"));
+			user.setPassword(userData.getString("newPassword"));
 			user.setCelNumber(userData.getString("celNumber"));
 			
 			try {

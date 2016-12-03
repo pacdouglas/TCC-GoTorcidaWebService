@@ -1,6 +1,8 @@
 package br.com.gotorcidaws.services;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -14,6 +16,8 @@ import javax.ws.rs.core.Response;
 import br.com.gotorcidaws.dao.DAOManager;
 import br.com.gotorcidaws.dao.EventDAO;
 import br.com.gotorcidaws.dao.EventResultDAO;
+import br.com.gotorcidaws.dao.TeamDAO;
+import br.com.gotorcidaws.dao.UserDAO;
 import br.com.gotorcidaws.model.Event;
 import br.com.gotorcidaws.model.EventResult;
 import br.com.gotorcidaws.utils.CollectionUtils;
@@ -182,16 +186,84 @@ public class EventService extends GoTorcidaService {
 	}
 
 	@POST
-	@Path("save")
+	@Path("save/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response save(String content) {
 		EventDAO eventDAO = DAOManager.getEventDAO();
+		EventResultDAO eventResultDAO = DAOManager.getEventResultDAO();
+		TeamDAO teamDAO = DAOManager.getTeamDAO();
+		UserDAO userDAO = DAOManager.getUserDAO();
+		
 		ServiceLogger.received(content);
 
-		Event event = JSONConverter.toInstanceOf(Event.class, content);
+		JSONObject eventJSON = new JSONObject(content);
+		Event event = new Event();
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(dateFormat.parse(eventJSON.getString("date")));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		event.setDate(calendar);
+		event.setTime(eventJSON.getString("time"));
+		event.setDescription(eventJSON.getString("description"));
+		event.setEventOwner(userDAO.findById(Integer.parseInt(eventJSON.getString("eventOwner"))));
+		event.setFirstTeam(teamDAO.findByID(Integer.parseInt(eventJSON.getString("firstTeam"))));
+		event.setSecondTeam(teamDAO.findByID(Integer.parseInt(eventJSON.getString("secondTeam"))));
+		event.setLatitude(Double.parseDouble(eventJSON.getString("latitude")));
+		event.setLongitude(Double.parseDouble(eventJSON.getString("longitude")));
+		event.setLocation(eventJSON.getString("location"));
+		event.setName(eventJSON.getString("name"));
+		event.setSport(event.getFirstTeam().getSport());
+		event.setCosts(eventJSON.getString("costs"));
+		
+		EventResult eventResult = new EventResult();
+		eventResult.setEvent(event);
+		eventResult.setFirstTeamScore(-1.0);
+		eventResult.setSecondTeamScore(-1.0);
+		eventResult.setWinner(null);
+		
 		try {
 			eventDAO.save(event);
+			eventResultDAO.save(eventResult);
 			message.setResponse(200, "Evento criado com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
+	@Path("postResult/{eventId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response postResult(@PathParam("eventId") String eventId, String content) {
+		ServiceLogger.received(content);
+		
+		EventDAO eventDAO = DAOManager.getEventDAO();
+		EventResultDAO eventResultDAO = DAOManager.getEventResultDAO();
+
+		JSONObject eventResultJSON = new JSONObject(content);
+		Event event = eventDAO.findByID(Integer.parseInt(eventId));
+		
+		EventResult eventResult = eventResultDAO.findByEventID(event);
+		eventResult.setFirstTeamScore(Double.parseDouble(eventResultJSON.getString("resultFirstTeam")));
+		eventResult.setSecondTeamScore(Double.parseDouble(eventResultJSON.getString("resultSecondTeam")));
+		eventResult.setWinner(null);
+		
+		if (eventResult.getFirstTeamScore() != eventResult.getSecondTeamScore()) {
+			eventResult.setWinner(eventResult.getFirstTeamScore() > eventResult.getSecondTeamScore() ? event.getFirstTeam() : event.getSecondTeam());
+		} 
+		
+		try {
+			eventResultDAO.update(eventResult);
+			message.setResponse(200, "Resultado do evento atribuído com sucesso!");
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação.");
 			ex.printStackTrace();
@@ -239,9 +311,14 @@ public class EventService extends GoTorcidaService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delete(@PathParam("eventId") String eventId, String content) {
 		EventDAO eventDAO = DAOManager.getEventDAO();
+		EventResultDAO eventResultDAO = DAOManager.getEventResultDAO();
+		
 		ServiceLogger.received(content);
 
+		Event event = eventDAO.findByID(Integer.parseInt(eventId));
+		EventResult eventResult = eventResultDAO.findByEventID(event);
 		try {
+			eventResultDAO.delete(eventResult.getId());
 			eventDAO.delete(Integer.parseInt(eventId));
 			message.setResponse(200, "Evento excluído com sucesso!");
 		} catch (Exception ex) {
@@ -252,5 +329,7 @@ public class EventService extends GoTorcidaService {
 		ServiceLogger.sent(message.toJSON());
 		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
+	
+	
 
 }

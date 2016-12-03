@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import br.com.gotorcidaws.model.Athlete;
@@ -47,6 +48,7 @@ public class TeamDAO extends GenericDAO<Team> {
 		Criteria criteria = getSession().createCriteria(Team.class);
 		criteria.createAlias("users", "usersAlias");
 		criteria.add(Restrictions.eq("usersAlias.id", user.getId()));
+		criteria.addOrder(Order.asc("name"));
 		
 		List<Team> teams = criteria.list();
 		getSession().disconnect();
@@ -58,6 +60,7 @@ public class TeamDAO extends GenericDAO<Team> {
 		Criteria criteria = getSession().createCriteria(TeamAthlete.class);
 		criteria.createAlias("team", "teamAlias");
 		criteria.add(Restrictions.like("teamAlias.id", team.getId()));
+		criteria.addOrder(Order.asc("name"));
 		List<TeamAthlete> teamAthletes = criteria.list();
 		
 		List<Athlete> athletes = new ArrayList<Athlete>();

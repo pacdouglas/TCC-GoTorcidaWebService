@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Subqueries;
@@ -40,6 +41,7 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 		Criteria criteria = getSession().createCriteria(Athlete.class);
 		criteria.createAlias("teamAthletes", "teamsAlias");
 		criteria.add(Restrictions.eq("teamsAlias.team.id", team.getId()));
+		criteria.addOrder(Order.asc("name"));
 		List<Athlete> athletes = criteria.list();
 		getSession().disconnect();
 		return athletes;
@@ -54,7 +56,8 @@ public class AthleteDAO extends GenericDAO<Athlete> {
 		detachedCriteria.add(Restrictions.eq("team.id", team.getId()));
 		
 		criteria.add(Subqueries.propertyNotIn("id", detachedCriteria.setProjection(Property.forName("athlete.id"))));
-
+		criteria.addOrder(Order.asc("name"));
+		
 		List<Athlete> athletes = criteria.list();
 		getSession().disconnect();
 		return athletes;

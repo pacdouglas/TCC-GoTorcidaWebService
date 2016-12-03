@@ -168,4 +168,24 @@ public class NewsService extends GoTorcidaService {
 		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
 	}
 
+	@POST
+	@Path("delete/{newsId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response delete(@PathParam("newsId") String newsId, String content) {
+		NewsDAO newsDAO = DAOManager.getNewsDAO();
+		ServiceLogger.received(content);
+
+		News news = newsDAO.findByID(Integer.parseInt(newsId));
+		try {
+			newsDAO.delete(news.getId());
+			message.setResponse(200, "Notícia removida com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+		
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
 }

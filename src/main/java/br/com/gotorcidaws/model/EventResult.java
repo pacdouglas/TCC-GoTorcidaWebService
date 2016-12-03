@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
@@ -29,7 +30,7 @@ public class EventResult implements Serializable {
 	@Column
 	private Double secondTeamScore;
 
-	@Column
+	@ManyToOne
 	private Team winner;
 
 	public int getId() {

@@ -42,9 +42,8 @@ public class Event implements Serializable {
 	private Double longitude;
 
 	@JsonDeserialize(using = DefaultDateDeserializer.class)
-	@JsonIgnore
-	@Column
 	@Temporal(TemporalType.DATE)
+	@Column
 	private Calendar date;
 
 	@Column

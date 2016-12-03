@@ -11,9 +11,14 @@ public class TeamAthleteDAO extends GenericDAO<TeamAthlete> {
 	public void save(TeamAthlete teamAthlete) {
 		super.save(teamAthlete);
 	}
-	
+
 	public void update(TeamAthlete teamAthlete) {
 		super.update(teamAthlete);
+	}
+
+	public void delete(int id) {
+		TeamAthlete teamAthlete = findById(id);
+		super.delete(teamAthlete);
 	}
 
 }

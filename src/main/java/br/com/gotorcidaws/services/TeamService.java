@@ -141,6 +141,48 @@ public class TeamService extends GoTorcidaService {
 	}
 	
 	@POST
+	@Path("removeAthleteOfTeam/{teamId}/{athleteId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response removeAthleteOfTeam(@PathParam("teamId") String teamID, @PathParam("athleteId") String athleteId, String content) {
+		TeamDAO teamDAO = DAOManager.getTeamDAO();
+		AthleteDAO athleteDAO = DAOManager.getAthleteDAO();
+		TeamAthleteDAO teamAthleteDAO = DAOManager.getTeamAthleteDAO();
+		ServiceLogger.received(content);
+		
+		Team team = teamDAO.findById(Integer.parseInt(teamID));
+		List<Athlete> athletes = athleteDAO.findByTeam(team);
+
+		Boolean stopLoop = false;
+		TeamAthlete teamAthlete = null;
+		for (int i = 0; i < athletes.size(); i++) {
+			if (stopLoop) {
+				break;
+			}
+			
+			for (int j = 0; j < athletes.get(i).getTeamAthletes().size(); j++) {
+				if ((athletes.get(i).getTeamAthletes().get(j).getTeam().getId() == team.getId()) && !stopLoop) {
+					if ((athletes.get(i).getTeamAthletes().get(j).getAthlete().getId() == Integer.parseInt(athleteId))) {
+						teamAthlete = athletes.get(i).getTeamAthletes().get(j);
+						stopLoop = true;
+						break;
+					}
+				}
+			}
+		}
+		
+		try {
+			teamAthleteDAO.delete(teamAthlete.getId());
+			message.setResponse(200, "Atleta removido com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+		
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	@POST
 	@Path("update/{teamID}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response update(@PathParam("teamID") String teamID, String content) {

@@ -146,8 +146,10 @@ public class AthleteService extends GoTorcidaService {
 		
 		Athlete athlete = JSONConverter.toInstanceOf(Athlete.class, athleteData.toString());
 		athlete.setSport(teamDAO.findById(Integer.parseInt(teamId)).getSport());
-		athlete.setUrlImage(FileUtilsGoTorcida.convertBase64ToImage(postParameters.getString("image"), athlete.getName()));
-		FileUtilsGoTorcida.sendFileToFTP(athlete.getUrlImage() + ".png");
+		
+		if (postParameters.has("image")){
+			athlete.setUrlImage(FileUtilsGoTorcida.convertBase64ToImage(postParameters.getString("image"), athlete.getName()));
+		}
 		
 		try {
 			athleteDAO.save(athlete);
@@ -182,9 +184,10 @@ public class AthleteService extends GoTorcidaService {
 		athlete.setFacebook(temporaryAthlete.getFacebook());
 		athlete.setInstagram(temporaryAthlete.getInstagram());
 		athlete.setTwitter(temporaryAthlete.getTwitter());
-		athlete.setUrlImage(FileUtilsGoTorcida.convertBase64ToImage(postParameters.getString("image"), athlete.getName()));
 		
-		FileUtilsGoTorcida.sendFileToFTP(athlete.getUrlImage());
+		if (postParameters.has("image")){
+			athlete.setUrlImage(FileUtilsGoTorcida.convertBase64ToImage(postParameters.getString("image"), athlete.getName()));
+		}
 		
 		TeamAthlete teamAthlete = null;
 		for (int i = 0; i < athlete.getTeamAthletes().size(); i++) {
