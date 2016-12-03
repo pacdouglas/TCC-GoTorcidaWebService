@@ -5,6 +5,11 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -21,11 +26,26 @@ public class FileUtilsGoTorcida {
 			bufferedImage = resizeImage(bufferedImage, bufferedImage.getType());
 			
 			File file = new File("/var/www/html/img/" + name + ".png");
-			file.setReadable(true);
-			file.setWritable(true);
-			file.setExecutable(true);
+			file.setReadable(true, false);
+			file.setWritable(true, false);
+			file.setExecutable(true, false);
+			ImageIO.write(bufferedImage, "png", file);
 			
-	        ImageIO.write(bufferedImage, "png", file);
+			Set<PosixFilePermission> perms = new HashSet<PosixFilePermission>();
+	        //add owners permission
+	        perms.add(PosixFilePermission.OWNER_READ);
+	        perms.add(PosixFilePermission.OWNER_WRITE);
+	        perms.add(PosixFilePermission.OWNER_EXECUTE);
+	        //add group permissions
+	        perms.add(PosixFilePermission.GROUP_READ);
+	        perms.add(PosixFilePermission.GROUP_WRITE);
+	        perms.add(PosixFilePermission.GROUP_EXECUTE);
+	        //add others permissions
+	        perms.add(PosixFilePermission.OTHERS_READ);
+	        perms.add(PosixFilePermission.OTHERS_WRITE);
+	        perms.add(PosixFilePermission.OTHERS_EXECUTE);
+	        
+	        Files.setPosixFilePermissions(Paths.get("/var/www/html/img/" + name + ".png"), perms);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
