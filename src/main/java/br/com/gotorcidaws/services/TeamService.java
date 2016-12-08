@@ -1,6 +1,7 @@
 package br.com.gotorcidaws.services;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -22,6 +23,7 @@ import br.com.gotorcidaws.model.Sport;
 import br.com.gotorcidaws.model.Team;
 import br.com.gotorcidaws.model.TeamAthlete;
 import br.com.gotorcidaws.model.User;
+import br.com.gotorcidaws.utils.FileUtilsGoTorcida;
 import br.com.gotorcidaws.utils.JSONConverter;
 import br.com.gotorcidaws.utils.ServiceLogger;
 import br.com.gotorcidaws.utils.json.JSONArray;
@@ -202,6 +204,44 @@ public class TeamService extends GoTorcidaService {
 		try {
 			teamDAO.update(team);
 			message.setResponse(200, "Dados alterados com sucesso!");
+		} catch (Exception ex) {
+			message.setResponse(500, "Erro interno da aplicação.");
+			ex.printStackTrace();
+		}
+
+		ServiceLogger.sent(message.toJSON());
+		return Response.ok(message.toJSON(), MediaType.APPLICATION_JSON).build();
+	}
+	
+	
+	@POST
+	@Path("insert/{teamID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response insert(@PathParam("teamID") String teamID, String content) {
+		TeamDAO teamDAO = DAOManager.getTeamDAO();
+		ServiceLogger.received(content);
+
+		Team team = teamDAO.findByID(Integer.parseInt(teamID));
+		JSONObject teamJSON = new JSONObject(content);
+		
+		Team newTeam = new Team();
+		newTeam.setActive("N");
+		newTeam.setEmailAddress("gotorcida@gotorcida.com.br");
+		newTeam.setName(teamJSON.getString("name"));
+		newTeam.setSinceWhen(Calendar.getInstance());
+		newTeam.setSport(team.getSport());
+		newTeam.setTeamType("G");
+		newTeam.setWebsite("www.gotorcida.com.br");
+		
+		if (teamJSON.has("image")){
+			newTeam.setUrlImage(FileUtilsGoTorcida.convertBase64ToImage(teamJSON.getString("image"), newTeam.getName()));
+		} else {
+			newTeam.setUrlImage("null");
+		}
+		
+		try {
+			teamDAO.save(newTeam);
+			message.setResponse(200, "Time incluído com sucesso!");
 		} catch (Exception ex) {
 			message.setResponse(500, "Erro interno da aplicação.");
 			ex.printStackTrace();
